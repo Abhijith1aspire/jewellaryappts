@@ -9,11 +9,17 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {useNavigation} from '@react-navigation/native';
 
 type FavItemProps = {
   image: string;
   title: string;
   price: number;
+  id: string;
+  originalprice: number;
+  description: string;
+  offer: string;
 };
 
 type RootStackParamList = {
@@ -30,6 +36,16 @@ type RootStackParamList = {
   CartScreen: undefined;
   FavoritesScreen: undefined;
   MapScreen: undefined;
+  ProductDetailsScreen: {
+    id: string;
+    title: string;
+    description: string;
+    price: string;
+    offer: string;
+    originalprice: number;
+    keywords: string;
+    image: string;
+  }[];
 };
 
 type HomeScreenNavigationProp = StackNavigationProp<
@@ -37,10 +53,37 @@ type HomeScreenNavigationProp = StackNavigationProp<
   'HomeScreen'
 >;
 
-const FavItem: React.FC<FavItemProps> = ({image, title, price}) => {
+type CardDetailsScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'CardDetails'
+>;
+
+const FavItem: React.FC<FavItemProps> = ({
+  image,
+  title,
+  price,
+  id,
+  offer,
+  originalprice,
+  description,
+}) => {
   const shortTitle = title.split(' ').slice(0, 5).join(' ');
+  const navigation = useNavigation<CardDetailsScreenNavigationProp>();
+
   return (
-    <TouchableOpacity style={styles.itemContainer} onPress={() => {}}>
+    <TouchableOpacity
+      style={styles.itemContainer}
+      onPress={() => {
+        navigation.navigate('CardDetails', {
+          image: image,
+          price: price,
+          originalPrice: originalprice,
+          offer: offer,
+          title: title,
+          description: description,
+          id: id,
+        });
+      }}>
       <Image
         source={{uri: image}}
         style={{width: 50, height: 50, resizeMode: 'contain'}}
@@ -54,26 +97,54 @@ const FavItem: React.FC<FavItemProps> = ({image, title, price}) => {
 };
 
 const FavoritesScreen: React.FC = () => {
+  const navigation = useNavigation<HomeScreenNavigationProp>();
+
   const favItems = useSelector(
     (state: {
       favdata: {
-        items: {id: string; title: string; price: number; image: string}[];
+        items: {
+          id: string;
+          title: string;
+          price: number;
+          image: string;
+          originalprice: number;
+          offer: string;
+          description: string;
+        }[];
       };
     }) => state.favdata.items,
   );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Favorites</Text>
+      <View style={{flexDirection: 'row', marginTop: 10}}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.goBack();
+          }}>
+          <Icon name="arrow-back" size={36} color="black" />
+        </TouchableOpacity>
+        <Text style={styles.title}>Favorites</Text>
+      </View>
+      {favItems.length === 0 && (
+        <Text style={{fontSize: 18, color: '#900'}}>
+          Please add some items to your favorites!
+        </Text>
+      )}
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        {favItems.map((item, index) => (
-          <FavItem
-            key={index.toString()}
-            image={item.image}
-            title={item.title}
-            price={item.price}
-          />
-        ))}
+        {favItems &&
+          favItems.map(item => (
+            <FavItem
+              key={item.id}
+              image={item.image}
+              title={item.title}
+              price={item.price}
+              id={item.id}
+              originalprice={item.originalprice}
+              offer={item.offer}
+              description={item.description}
+            />
+          ))}
       </ScrollView>
     </View>
   );
@@ -83,28 +154,30 @@ export default FavoritesScreen;
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 1,
+    marginLeft: 10,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 20,
+    marginLeft: 20,
+    color: 'black',
   },
   scrollViewContent: {
     flexGrow: 1,
   },
   itemContainer: {
-    width: '100%',
+    width: '98%',
     height: 80,
     flexDirection: 'row',
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderRadius: 5,
     backgroundColor: '#FDF2F2',
     alignItems: 'center',
+    paddingHorizontal: 40,
     marginBottom: 10,
-    paddingHorizontal: 50,
   },
   itemText: {
     fontSize: 14,

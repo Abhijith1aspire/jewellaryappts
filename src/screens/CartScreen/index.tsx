@@ -1,51 +1,154 @@
 import React from 'react';
 import {useSelector} from 'react-redux';
-import {StyleSheet, Text, View, ScrollView, Image} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 type CartItemProps = {
   image: string;
   title: string;
   price: number;
+  originalprice: number;
+  offer: string;
+  description: string;
+  id: string;
 };
-const CartItem: React.FC<CartItemProps> = ({image, title, price}) => {
+
+type RootStackParamList = {
+  HomeScreen: undefined;
+  CardDetails: {
+    image: string;
+    price: number;
+    originalPrice: number;
+    offer: string;
+    title: string;
+    description: string;
+    id: string;
+  };
+  CartScreen: undefined;
+  FavoritesScreen: undefined;
+  MapScreen: undefined;
+  ProductDetailsScreen: {
+    id: string;
+    title: string;
+    description: string;
+    price: string;
+    offer: string;
+    originalprice: number;
+    keywords: string;
+    image: string;
+  }[];
+};
+
+type CardDetailsScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'CardDetails'
+>;
+
+const CartItem: React.FC<CartItemProps> = ({
+  image,
+  title,
+  price,
+  originalprice,
+  offer,
+  description,
+  id,
+}) => {
   const shortTitle = title.split(' ').slice(0, 5).join(' ');
+  const navigation = useNavigation<CardDetailsScreenNavigationProp>();
+
   return (
-    <View style={styles.itemContainer}>
-      <Image
-        source={{uri: image}}
-        style={{width: 50, height: 50, resizeMode: 'contain'}}
-      />
-      <View style={{marginLeft: 10}}>
+    <TouchableOpacity
+      style={styles.itemContainer}
+      onPress={() => {
+        navigation.navigate('CardDetails', {
+          image: image,
+          price: price,
+          originalPrice: originalprice,
+          offer: offer,
+          title: title,
+          description: description,
+          id: id,
+        });
+      }}>
+      <Image source={{uri: image}} style={styles.itemImage} />
+      <View style={styles.itemDetails}>
         <Text style={styles.itemText}>{shortTitle}</Text>
         <Text style={styles.itemText}>Rs {price}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
 const CartScreen: React.FC = () => {
+  const navigation = useNavigation<CardDetailsScreenNavigationProp>();
+
   const cartItems = useSelector(
     (state: {
       cartdata: {
-        items: {id: string; title: string; price: number; image: string}[];
+        items: {
+          id: string;
+          title: string;
+          price: number;
+          image: string;
+          originalprice: number;
+          offer: string;
+          description: string;
+        }[];
       };
     }) => state.cartdata.items,
   );
 
-  // console.log(cartItems.reduce((acc,cur)=>));
+  const totalAmount = cartItems.reduce((acc, cur) => acc + cur.price, 0);
+
+  console.log(totalAmount);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Cart Items</Text>
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        {cartItems.map((item, index) => (
-          <CartItem
-            key={index.toString()}
-            image={item.image}
-            title={item.title}
-            price={item.price}
-          />
-        ))}
-      </ScrollView>
+      <View style={styles.header}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.goBack();
+          }}>
+          <Icon name="arrow-back" size={36} color="black" />
+        </TouchableOpacity>
+        <Text style={styles.title}>Cart</Text>
+      </View>
+      {cartItems.length === 0 ? (
+        <Text style={styles.emptyCartText}>
+          Your Cart is empty. Please add some items to your Cart!
+        </Text>
+      ) : (
+        <ScrollView contentContainerStyle={styles.scrollViewContent}>
+          <View style={styles.itemsContainer}>
+            {cartItems.map(item => (
+              <CartItem
+                key={item.id}
+                image={item.image}
+                title={item.title}
+                price={item.price}
+                originalprice={item.originalprice}
+                offer={item.offer}
+                description={item.description}
+                id={item.id}
+              />
+            ))}
+          </View>
+        </ScrollView>
+      )}
+      {cartItems.length > 0 && (
+        <View style={styles.totalContainer}>
+          <Text style={styles.totalText}>Cart total: Rs {totalAmount}</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -55,28 +158,45 @@ export default CartScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    backgroundColor: '#FFF',
+  },
+  header: {
+    flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: 10,
+    marginVertical: 10,
+    paddingHorizontal: 10,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginLeft: 20,
+    color: 'black',
+  },
+  emptyCartText: {
+    fontSize: 18,
+    color: '#900',
+    textAlign: 'center',
+    marginTop: 20,
   },
   scrollViewContent: {
     flexGrow: 1,
+    paddingHorizontal: 10,
+    paddingBottom: 60,
+  },
+  itemsContainer: {
+    flex: 1,
   },
   itemContainer: {
-    width: '100%',
-    height: 80,
     flexDirection: 'row',
-    borderWidth: 1,
+    alignItems: 'center',
+    padding: 10,
+    borderWidth: 0.5,
     borderRadius: 5,
     backgroundColor: '#FDF2F2',
-    alignItems: 'center',
     marginBottom: 10,
-    paddingHorizontal: 40,
+  },
+  itemDetails: {
+    marginLeft: 10,
   },
   itemText: {
     fontSize: 14,
@@ -84,7 +204,22 @@ const styles = StyleSheet.create({
   itemImage: {
     width: 50,
     height: 50,
-    resizeMode: 'cover',
+    resizeMode: 'contain',
     borderRadius: 5,
+  },
+  totalContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#900',
+  },
+  totalText: {
+    fontSize: 18,
+    color: 'white',
+    fontWeight: 'bold',
   },
 });

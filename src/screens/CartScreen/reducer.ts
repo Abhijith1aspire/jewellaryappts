@@ -1,7 +1,7 @@
 import { ADD_TO_CART, REMOVE_FROM_CART } from "./actionTypes";
 
 type CartState = {
-  items: { id: string; title: string; price: number; image: string }[];
+  items: { id: string; title: string; price: number; image: string; originalprice:number; offer:string; description:string  }[];
 }
 
 type Action = { type: string; payload: any };

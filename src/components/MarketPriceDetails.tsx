@@ -4,6 +4,7 @@ import SelectDropdown from 'react-native-select-dropdown';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import DateTimePicker from './DateTimePicker';
 
 type Item = {
   title: string;
@@ -43,6 +44,16 @@ type RootStackParamList = {
   CartScreen: undefined;
   FavoritesScreen: undefined;
   MapScreen: undefined;
+  ProductDetailsScreen: {
+    id: string;
+    title: string;
+    description: string;
+    price: string;
+    offer: string;
+    originalprice: number;
+    keywords: string;
+    image: string;
+  }[];
 };
 
 type MapScreenNavigationProp = StackNavigationProp<
@@ -53,6 +64,13 @@ type MapScreenNavigationProp = StackNavigationProp<
 const MarketPriceDetails: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<Item>(items[0]);
   const navigation = useNavigation<MapScreenNavigationProp>();
+  const [openDateTimePicker, setOpenDateTimePicker] = useState<boolean>(false);
+
+  console.log(openDateTimePicker);
+
+  const handleDateTimePicker = () => {
+    setOpenDateTimePicker(prevState => !prevState);
+  };
 
   return (
     <View style={styles.container}>
@@ -101,9 +119,13 @@ const MarketPriceDetails: React.FC = () => {
         <TouchableOpacity onPress={() => navigation.navigate('MapScreen')}>
           <Icon name="google-maps" size={30} style={styles.additionalIcon} />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleDateTimePicker}>
           <Icon name="calendar-month" size={30} style={styles.additionalIcon} />
         </TouchableOpacity>
+        <DateTimePicker
+          openDateTimePicker={openDateTimePicker}
+          setOpenDateTimePicker={handleDateTimePicker}
+        />
       </View>
     </View>
   );

@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
-import {data} from '../../data/data';
 import LikeIcon from 'react-native-vector-icons/AntDesign';
 import Icon from 'react-native-vector-icons/Feather';
 import {useNavigation} from '@react-navigation/native';
@@ -12,11 +11,12 @@ import {isItemInCart} from '../../utils';
 type CarditemProps = {
   image: string;
   price: number;
-  originalPrice: number;
+  originalprice: number;
   offer: string;
   title: string;
   description: string;
   id: string;
+  keywords: string;
 };
 
 type RootStackParamList = {
@@ -33,6 +33,16 @@ type RootStackParamList = {
   CartScreen: undefined;
   FavoritesScreen: undefined;
   MapScreen: undefined;
+  ProductDetailsScreen: {
+    id: string;
+    title: string;
+    description: string;
+    price: string;
+    offer: string;
+    originalprice: number;
+    keywords: string;
+    image: string;
+  }[];
 };
 
 type CardDetailScreenNavigationProp = StackNavigationProp<
@@ -41,13 +51,14 @@ type CardDetailScreenNavigationProp = StackNavigationProp<
 >;
 
 type CardProps = {
-  searchText: string;
+  searchText?: string;
+  data: CarditemProps[];
 };
 
 const JewelleryItemRow: React.FC<CarditemProps> = ({
   image,
   price,
-  originalPrice,
+  originalprice,
   offer,
   title,
   description,
@@ -70,7 +81,7 @@ const JewelleryItemRow: React.FC<CarditemProps> = ({
         navigation.navigate('CardDetails', {
           image: image,
           price: price,
-          originalPrice: originalPrice,
+          originalPrice: originalprice,
           offer: offer,
           title: title,
           description: description,
@@ -94,7 +105,17 @@ const JewelleryItemRow: React.FC<CarditemProps> = ({
               console.log('Added to Favorites');
               dispatch(
                 addToFav({
-                  items: [{id: id, title: title, price: price, image: image}],
+                  items: [
+                    {
+                      id: id,
+                      title: title,
+                      price: price,
+                      image: image,
+                      originalprice: originalprice,
+                      offer: offer,
+                      description: description,
+                    },
+                  ],
                 }),
               );
             }
@@ -115,7 +136,7 @@ const JewelleryItemRow: React.FC<CarditemProps> = ({
           alignItems: 'center',
         }}>
         <Text style={styles.priceText}>₹{price}</Text>
-        <Text style={styles.originalpriceText}>₹{originalPrice}</Text>
+        <Text style={styles.originalpriceText}>₹{originalprice}</Text>
       </View>
       <View style={{paddingBottom: 10}}>
         <Text style={styles.offerText}>{offer} Off</Text>
@@ -124,31 +145,32 @@ const JewelleryItemRow: React.FC<CarditemProps> = ({
   );
 };
 
-const Card: React.FC<CardProps> = ({searchText}) => {
-  const [filteredData, setFiltertedData] = useState(data);
+const Card: React.FC<CardProps> = ({searchText = '', data}) => {
+  const [filteredData, setFilteredData] = useState(data);
   useEffect(() => {
     if (searchText === '') {
-      setFiltertedData(data);
+      setFilteredData(data);
     } else {
       const newData = data.filter(item =>
         item.keywords.toLowerCase().includes(searchText.toLowerCase()),
       );
-      setFiltertedData(newData);
+      setFilteredData(newData);
     }
   }, [searchText]);
 
   return (
     <View style={styles.container}>
-      {filteredData.map((item, index) => (
+      {filteredData?.map((item, index) => (
         <JewelleryItemRow
-          key={index.toString()}
+          key={item.id}
           image={item.image}
           price={item.price}
-          originalPrice={item.originalprice}
+          originalprice={item.originalprice}
           offer={item.offer}
           title={item.title}
           description={item.description}
           id={item.id}
+          keywords={item.keywords}
         />
       ))}
     </View>
@@ -178,11 +200,12 @@ const styles = StyleSheet.create({
   iconContainer: {
     height: 24,
     width: 24,
-    backgroundColor: '#daeff0',
+    backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 2,
     marginTop: 15,
+    borderWidth: 0.1,
   },
   image: {
     width: '70%',

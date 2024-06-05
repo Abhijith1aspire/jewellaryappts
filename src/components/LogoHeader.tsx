@@ -22,6 +22,16 @@ type RootStackParamList = {
   CartScreen: undefined;
   FavoritesScreen: undefined;
   MapScreen: undefined;
+  ProductDetailsScreen: {
+    id: string;
+    title: string;
+    description: string;
+    price: string;
+    offer: string;
+    originalprice: number;
+    keywords: string;
+    image: string;
+  }[];
 };
 
 type CartScreenNavigationProp = StackNavigationProp<

@@ -6,18 +6,19 @@ import Search from '../../components/Search';
 import HorizontalScrollContainer from '../../components/HorizontalScrollContainer';
 import Card from '../../components/Card';
 import Banner from '../../components/Banner';
+import {data} from '../../../data/data';
 
 const HomeScreen: React.FC = () => {
   const [searchText, setSearchText] = useState<string>('');
+
   console.log(searchText);
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
         stickyHeaderIndices={[1]}>
-        <View style={styles.marketPriceDetailsContainer}>
-          <MarketPriceDetails />
-        </View>
+        <MarketPriceDetails />
         <View style={styles.headerContainer}>
           <LogoHeader />
           <View style={{alignItems: 'center'}}>
@@ -27,7 +28,7 @@ const HomeScreen: React.FC = () => {
         <Banner />
         <Text style={styles.sectionTitle}>Gold Jewellery</Text>
         <HorizontalScrollContainer />
-        <Card searchText={searchText} />
+        <Card searchText={searchText} data={data} />
       </ScrollView>
     </SafeAreaView>
   );
