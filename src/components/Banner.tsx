@@ -21,8 +21,8 @@ const styles = StyleSheet.create({
     width: '85%',
     height: 150,
     borderRadius: 20,
-    alignSelf: 'center', // Center the banner horizontally
-    marginVertical: 20, // Add vertical margin to space out the banners
+    alignSelf: 'center',
+    marginVertical: 20,
   },
   image: {
     width: '100%',

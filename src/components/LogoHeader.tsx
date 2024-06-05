@@ -5,8 +5,33 @@ import AccountIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import LikeIcon from 'react-native-vector-icons/AntDesign';
 import ShoppingBagIcon from 'react-native-vector-icons/Feather';
 import MenuIcon from 'react-native-vector-icons/Feather';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+
+type RootStackParamList = {
+  HomeScreen: undefined;
+  CardDetails: {
+    image: string;
+    price: number;
+    originalPrice: number;
+    offer: string;
+    title: string;
+    description: string;
+    id: string;
+  };
+  CartScreen: undefined;
+  FavoritesScreen: undefined;
+  MapScreen: undefined;
+};
+
+type CartScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'CartScreen'
+>;
 
 const LogoHeader: React.FC = () => {
+  const navigation = useNavigation<CartScreenNavigationProp>();
+
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
@@ -25,23 +50,24 @@ const LogoHeader: React.FC = () => {
       </View>
       <View style={styles.iconContainer}>
         <TouchableOpacity>
-          <StarIcon name="star-o" size={25} color="#900" style={styles.icon} />
+          <StarIcon name="star-o" size={23} color="#900" style={styles.icon} />
         </TouchableOpacity>
         <TouchableOpacity>
           <AccountIcon
             name="account-outline"
-            size={30}
+            size={26}
             color="#900"
             style={styles.icon}
           />
         </TouchableOpacity>
-        <TouchableOpacity>
-          <LikeIcon name="hearto" size={25} color="#900" style={styles.icon} />
+        <TouchableOpacity
+          onPress={() => navigation.navigate('FavoritesScreen')}>
+          <LikeIcon name="hearto" size={22} color="#900" style={styles.icon} />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('CartScreen')}>
           <ShoppingBagIcon
             name="shopping-bag"
-            size={25}
+            size={22}
             color="#900"
             style={styles.icon}
           />
@@ -58,8 +84,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 10,
-    paddingVertical: 8,
   },
   logoContainer: {
     flexDirection: 'row',
@@ -70,6 +94,7 @@ const styles = StyleSheet.create({
     height: 60,
     resizeMode: 'contain',
     marginLeft: 10,
+    marginTop: 5,
   },
   iconContainer: {
     flexDirection: 'row',

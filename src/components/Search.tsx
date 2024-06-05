@@ -1,15 +1,31 @@
 import {StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import SearchIcon from 'react-native-vector-icons/Ionicons';
 import CameraIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MicIcon from 'react-native-vector-icons/Feather';
 
-const Search: React.FC = () => {
+type SearchProps = {
+  onSearch: (text: string) => void;
+};
+
+const Search: React.FC<SearchProps> = ({onSearch}) => {
+  const [searchText, setSearchText] = useState<string>('');
+
+  const handleSearch = (text: string) => {
+    setSearchText(text);
+    onSearch(text);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.leftContainer}>
         <SearchIcon name="search" size={24} style={styles.icon} />
-        <TextInput style={styles.input} placeholder="Search" />
+        <TextInput
+          style={styles.input}
+          placeholder="Search"
+          value={searchText}
+          onChangeText={handleSearch}
+        />
       </View>
       <View style={styles.rightContainer}>
         <TouchableOpacity>
@@ -27,14 +43,15 @@ export default Search;
 
 const styles = StyleSheet.create({
   container: {
-    width: '95%',
-    height: 40,
+    width: '100%',
+    height: 46,
     borderRadius: 5,
     paddingHorizontal: 10,
     backgroundColor: '#FDF2F2',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    marginBottom: 10,
   },
   leftContainer: {
     flexDirection: 'row',

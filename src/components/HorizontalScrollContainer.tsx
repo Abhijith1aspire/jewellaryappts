@@ -15,7 +15,6 @@ type JewellaryItemProps = {
 };
 
 const JewellaryItem: React.FC<JewellaryItemProps> = ({image, title}) => {
-  console.log(image, title);
   return (
     <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center'}}>
       <View style={styles.item}>
@@ -24,7 +23,9 @@ const JewellaryItem: React.FC<JewellaryItemProps> = ({image, title}) => {
           style={{width: 80, height: 80, resizeMode: 'stretch'}}
         />
       </View>
-      <Text>{title}</Text>
+      <Text style={{fontSize: 14, color: '#900', fontWeight: '600'}}>
+        {title}
+      </Text>
     </TouchableOpacity>
   );
 };

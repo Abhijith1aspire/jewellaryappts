@@ -2,6 +2,8 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
 import SelectDropdown from 'react-native-select-dropdown';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 type Item = {
   title: string;
@@ -27,8 +29,30 @@ const items: Item[] = [
   },
 ];
 
+type RootStackParamList = {
+  HomeScreen: undefined;
+  CardDetails: {
+    image: string;
+    price: number;
+    originalPrice: number;
+    offer: string;
+    title: string;
+    description: string;
+    id: string;
+  };
+  CartScreen: undefined;
+  FavoritesScreen: undefined;
+  MapScreen: undefined;
+};
+
+type MapScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'MapScreen'
+>;
+
 const MarketPriceDetails: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<Item>(items[0]);
+  const navigation = useNavigation<MapScreenNavigationProp>();
 
   return (
     <View style={styles.container}>
@@ -74,7 +98,7 @@ const MarketPriceDetails: React.FC = () => {
         showsVerticalScrollIndicator={false}
       />
       <View style={styles.iconWrapper}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('MapScreen')}>
           <Icon name="google-maps" size={30} style={styles.additionalIcon} />
         </TouchableOpacity>
         <TouchableOpacity>
@@ -89,6 +113,7 @@ export default MarketPriceDetails;
 
 const styles = StyleSheet.create({
   container: {
+    width: '100%',
     paddingVertical: 10,
     alignItems: 'center',
     backgroundColor: '#FDF2F2',
@@ -101,9 +126,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FDF2F2',
     borderRadius: 12,
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 10,
     marginLeft: 20,
   },
   dropdownButtonTxtStyle: {

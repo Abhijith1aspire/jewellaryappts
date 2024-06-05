@@ -1,5 +1,5 @@
 type Data = {
-  id: number;
+  id: string;
   title: string;
   price: number;
   originalprice: number;
@@ -11,11 +11,12 @@ type Data = {
     count: number;
   };
   offer: string;
+  keywords:string;
 };
 
 export const data: Data[] = [
   {
-    id: 5,
+    id: '1',
     title:
       "John Hardy Women's Legends Naga Gold & Silver Dragon Station Chain Bracelet",
     price: 695,
@@ -29,9 +30,10 @@ export const data: Data[] = [
       count: 400,
     },
     offer: '20%',
+    keywords:'Silver Jewellary Chain Bracelet',
   },
   {
-    id: 6,
+    id: '2',
     title: 'Solid Gold Petite Micropave ',
     price: 168,
     originalprice: 1999,
@@ -44,9 +46,10 @@ export const data: Data[] = [
       count: 70,
     },
     offer: '20%',
+    keywords:'Gold Jewellary Bracelet Silver',
   },
   {
-    id: 7,
+    id: '3',
     title: 'White Gold Plated Princess',
     price: 9.99,
     originalprice: 1999,
@@ -59,9 +62,10 @@ export const data: Data[] = [
       count: 400,
     },
     offer: '20%',
+    keywords:'Silver Jewellary Ring Diamond',
   },
   {
-    id: 8,
+    id: '4',
     title: 'Pierced Owl Rose Gold Plated Stainless Steel Double',
     price: 10.99,
     originalprice: 1999,
@@ -74,9 +78,10 @@ export const data: Data[] = [
       count: 100,
     },
     offer: '20%',
+    keywords:'Gold Jewellary Rose Earrings',
   },
   {
-    id: 5,
+    id: '5',
     title:
       "John Hardy Women's Legends Naga Gold & Silver Dragon Station Chain Bracelet",
     price: 695,
@@ -90,9 +95,10 @@ export const data: Data[] = [
       count: 400,
     },
     offer: '20%',
+    keywords:'Silver Shiny Diamond Ring',
   },
   {
-    id: 6,
+    id: '6',
     title: 'Solid Gold Petite Micropave ',
     price: 168,
     originalprice: 1999,
@@ -105,9 +111,10 @@ export const data: Data[] = [
       count: 70,
     },
     offer: '20%',
+    keywords:'Silver Jewellary Chain Bangle',
   },
   {
-    id: 7,
+    id: '7',
     title: 'White Gold Plated Princess',
     price: 9.99,
     originalprice: 1999,
@@ -120,9 +127,10 @@ export const data: Data[] = [
       count: 400,
     },
     offer: '20%',
+    keywords:'Diamond Jewellary Chain Ring',
   },
   {
-    id: 8,
+    id: '8',
     title: 'Pierced Owl Rose Gold Plated Stainless Steel Double',
     price: 10.99,
     originalprice: 1999,
@@ -135,9 +143,10 @@ export const data: Data[] = [
       count: 100,
     },
     offer: '20%',
+    keywords:'Beautiful Jewellary Double Earrings',
   },
   {
-    id: 5,
+    id: '9',
     title:
       "John Hardy Women's Legends Naga Gold & Silver Dragon Station Chain Bracelet",
     price: 695,
@@ -151,9 +160,10 @@ export const data: Data[] = [
       count: 400,
     },
     offer: '20%',
+    keywords:'Silver Jewellary Gold Bracelet',
   },
   {
-    id: 6,
+    id: '10',
     title: 'Solid Gold Petite Micropave ',
     price: 168,
     originalprice: 1999,
@@ -166,9 +176,10 @@ export const data: Data[] = [
       count: 70,
     },
     offer: '20%',
+    keywords:'Silver Jewellary Micropave Bracelet Men',
   },
   {
-    id: 7,
+    id: '11',
     title: 'White Gold Plated Princess',
     price: 9.99,
     originalprice: 1999,
@@ -181,9 +192,10 @@ export const data: Data[] = [
       count: 400,
     },
     offer: '20%',
+    keywords:'Silver Jewellary Diamond Ring Women',
   },
   {
-    id: 8,
+    id: '12',
     title: 'Pierced Owl Rose Gold Plated Stainless Steel Double',
     price: 10.99,
     originalprice: 1999,
@@ -196,9 +208,10 @@ export const data: Data[] = [
       count: 100,
     },
     offer: '20%',
+    keywords:'Silver Jewellary Diamond Ring Women',
   },
   {
-    id: 5,
+    id: '13',
     title:
       "John Hardy Women's Legends Naga Gold & Silver Dragon Station Chain Bracelet",
     price: 695,
@@ -212,9 +225,10 @@ export const data: Data[] = [
       count: 400,
     },
     offer: '20%',
+    keywords:'Silver Jewellary Bracelet Chain Women',
   },
   {
-    id: 6,
+    id: '14',
     title: 'Solid Gold Petite Micropave ',
     price: 168,
     originalprice: 1999,
@@ -227,9 +241,10 @@ export const data: Data[] = [
       count: 70,
     },
     offer: '20%',
+    keywords:'Gold Jewellary Diamond Women',
   },
   {
-    id: 7,
+    id: '15',
     title: 'White Gold Plated Princess',
     price: 9.99,
     originalprice: 1999,
@@ -242,9 +257,10 @@ export const data: Data[] = [
       count: 400,
     },
     offer: '20%',
+    keywords:'Gold Princess Diamond Women',
   },
   {
-    id: 8,
+    id: '16',
     title: 'Pierced Owl Rose Gold Plated Stainless Steel Double',
     price: 10.99,
     originalprice: 1999,
@@ -257,6 +273,7 @@ export const data: Data[] = [
       count: 100,
     },
     offer: '20%',
+    keywords:'Gold Jewellary Double Women',
   },
 ];
 
@@ -312,3 +329,208 @@ export const jewellary: jewellaryData[] = [
       'http://t0.gstatic.com/images?q=tbn:ANd9GcSi1acCoyFpJq86GdUHl-uLJJIcv0783lsk1bJv0SoarUblFYrn',
   },
 ];
+
+
+interface JewelryItem {
+  id: string;
+  title: string;
+  description: string;
+  price: string;
+  offer: string;
+}
+
+interface JewelryTypeData {
+  bangles: JewelryItem[];
+  chains: JewelryItem[];
+  earrings: JewelryItem[];
+  rings: JewelryItem[];
+  someothers: JewelryItem[];
+}
+
+export const dummyData: JewelryTypeData = {
+  bangles: [
+    {
+      id: "B001",
+      title: "Gold Plated Bangle",
+      description: "A beautifully crafted gold plated bangle with intricate designs.",
+      price: "49.99",
+      offer: "10% off"
+    },
+    {
+      id: "B002",
+      title: "Silver Charm Bangle",
+      description: "Elegant silver bangle with charming pendants.",
+      price: "39.99",
+      offer: "15% off"
+    },
+    {
+      id: "B003",
+      title: "Diamond Studded Bangle",
+      description: "Luxurious bangle studded with sparkling diamonds.",
+      price: "299.99",
+      offer: "5% off"
+    },
+    {
+      id: "B004",
+      title: "Rose Gold Bangle",
+      description: "Stylish rose gold bangle with a sleek design.",
+      price: "59.99",
+      offer: "20% off"
+    },
+    {
+      id: "B005",
+      title: "Antique Bronze Bangle",
+      description: "Vintage bronze bangle with antique finish.",
+      price: "34.99",
+      offer: "10% off"
+    }
+  ],
+  chains: [
+    {
+      id: "C001",
+      title: "Gold Chain Necklace",
+      description: "A classic gold chain necklace, perfect for any occasion.",
+      price: "199.99",
+      offer: "10% off"
+    },
+    {
+      id: "C002",
+      title: "Silver Link Chain",
+      description: "Stylish silver link chain, suitable for both men and women.",
+      price: "89.99",
+      offer: "15% off"
+    },
+    {
+      id: "C003",
+      title: "Platinum Chain",
+      description: "Luxurious platinum chain for a sophisticated look.",
+      price: "499.99",
+      offer: "5% off"
+    },
+    {
+      id: "C004",
+      title: "Rose Gold Chain",
+      description: "Elegant rose gold chain, perfect for everyday wear.",
+      price: "159.99",
+      offer: "20% off"
+    },
+    {
+      id: "C005",
+      title: "Black Onyx Chain",
+      description: "Bold black onyx chain for a modern style.",
+      price: "129.99",
+      offer: "10% off"
+    }
+  ],
+  earrings: [
+    {
+      id: "E001",
+      title: "Diamond Stud Earrings",
+      description: "Elegant diamond stud earrings that add a touch of sparkle.",
+      price: "249.99",
+      offer: "10% off"
+    },
+    {
+      id: "E002",
+      title: "Gold Hoop Earrings",
+      description: "Classic gold hoop earrings, perfect for any occasion.",
+      price: "69.99",
+      offer: "15% off"
+    },
+    {
+      id: "E003",
+      title: "Silver Drop Earrings",
+      description: "Stylish silver drop earrings for a modern look.",
+      price: "49.99",
+      offer: "5% off"
+    },
+    {
+      id: "E004",
+      title: "Pearl Stud Earrings",
+      description: "Timeless pearl stud earrings for a touch of elegance.",
+      price: "59.99",
+      offer: "20% off"
+    },
+    {
+      id: "E005",
+      title: "Crystal Chandelier Earrings",
+      description: "Sparkling crystal chandelier earrings for special occasions.",
+      price: "99.99",
+      offer: "10% off"
+    }
+  ],
+  rings: [
+    {
+      id: "R001",
+      title: "Gold Band Ring",
+      description: "Simple yet elegant gold band ring for everyday wear.",
+      price: "79.99",
+      offer: "10% off"
+    },
+    {
+      id: "R002",
+      title: "Diamond Engagement Ring",
+      description: "Stunning diamond engagement ring with a classic design.",
+      price: "999.99",
+      offer: "15% off"
+    },
+    {
+      id: "R003",
+      title: "Silver Infinity Ring",
+      description: "Stylish silver infinity ring symbolizing eternal love.",
+      price: "59.99",
+      offer: "5% off"
+    },
+    {
+      id: "R004",
+      title: "Emerald Cocktail Ring",
+      description: "Gorgeous emerald cocktail ring for a statement look.",
+      price: "149.99",
+      offer: "20% off"
+    },
+    {
+      id: "R005",
+      title: "Rose Gold Stackable Ring",
+      description: "Trendy rose gold stackable ring for a versatile style.",
+      price: "39.99",
+      offer: "10% off"
+    }
+  ],
+  someothers: [
+    {
+      id: "S001",
+      title: "Gold Brooch",
+      description: "Elegant gold brooch with intricate detailing.",
+      price: "89.99",
+      offer: "10% off"
+    },
+    {
+      id: "S002",
+      title: "Silver Cufflinks",
+      description: "Sophisticated silver cufflinks for formal occasions.",
+      price: "49.99",
+      offer: "15% off"
+    },
+    {
+      id: "S003",
+      title: "Pearl Necklace",
+      description: "Classic pearl necklace for a timeless look.",
+      price: "199.99",
+      offer: "5% off"
+    },
+    {
+      id: "S004",
+      title: "Crystal Tiara",
+      description: "Sparkling crystal tiara for special events.",
+      price: "129.99",
+      offer: "20% off"
+    },
+    {
+      id: "S005",
+      title: "Leather Bracelet",
+      description: "Trendy leather bracelet with metal accents.",
+      price: "39.99",
+      offer: "10% off"
+    }
+  ]
+};
