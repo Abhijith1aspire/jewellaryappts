@@ -12,7 +12,6 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
   setOpenDateTimePicker,
 }) => {
   const [date, setDate] = useState<any>(new Date());
-  console.log('Selected Date', date);
   return (
     <View>
       <Text>DatePicker</Text>

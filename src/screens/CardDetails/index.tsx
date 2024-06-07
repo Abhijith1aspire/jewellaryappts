@@ -6,8 +6,9 @@ import {addToCart} from '../CartScreen/action.ts';
 import {addToFav} from '../FavoritesScreen/action.ts';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {isItemInCart} from '../../../utils.ts';
+import {isItemInCart} from '../../utils/utils.ts';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {RootStackParamList} from '../../props/prop.ts';
 
 type CardDetailsProps = {
   route: {
@@ -21,32 +22,6 @@ type CardDetailsProps = {
       id: string;
     };
   };
-};
-
-type RootStackParamList = {
-  HomeScreen: undefined;
-  CardDetails: {
-    image: string;
-    price: number;
-    originalPrice: number;
-    offer: string;
-    title: string;
-    description: string;
-    id: string;
-  };
-  CartScreen: undefined;
-  FavoritesScreen: undefined;
-  MapScreen: undefined;
-  ProductDetailsScreen: {
-    id: string;
-    title: string;
-    description: string;
-    price: string;
-    offer: string;
-    originalprice: number;
-    keywords: string;
-    image: string;
-  }[];
 };
 
 type CartScreenNavigationProp = StackNavigationProp<
@@ -160,7 +135,6 @@ const CardDetails: React.FC<CardDetailsProps> = ({route}) => {
         <Button
           title="View Cart"
           onPress={() => {
-            console.log('View cart');
             navigation.navigate('CartScreen');
           }}
           color="black"

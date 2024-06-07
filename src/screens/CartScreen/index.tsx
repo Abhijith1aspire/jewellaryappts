@@ -11,6 +11,7 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../../props/prop';
 
 type CartItemProps = {
   image: string;
@@ -20,32 +21,6 @@ type CartItemProps = {
   offer: string;
   description: string;
   id: string;
-};
-
-type RootStackParamList = {
-  HomeScreen: undefined;
-  CardDetails: {
-    image: string;
-    price: number;
-    originalPrice: number;
-    offer: string;
-    title: string;
-    description: string;
-    id: string;
-  };
-  CartScreen: undefined;
-  FavoritesScreen: undefined;
-  MapScreen: undefined;
-  ProductDetailsScreen: {
-    id: string;
-    title: string;
-    description: string;
-    price: string;
-    offer: string;
-    originalprice: number;
-    keywords: string;
-    image: string;
-  }[];
 };
 
 type CardDetailsScreenNavigationProp = StackNavigationProp<
@@ -108,8 +83,6 @@ const CartScreen: React.FC = () => {
   );
 
   const totalAmount = cartItems.reduce((acc, cur) => acc + cur.price, 0);
-
-  console.log(totalAmount);
 
   return (
     <View style={styles.container}>

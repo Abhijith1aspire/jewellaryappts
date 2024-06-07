@@ -11,36 +11,11 @@ import {jewellary} from '../../data/data';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {dummyData} from '../../data/data';
+import {RootStackParamList} from '../props/prop';
 
 type JewellaryItemProps = {
   image: string;
   title: string;
-};
-
-type RootStackParamList = {
-  HomeScreen: undefined;
-  CardDetails: {
-    image: string;
-    price: number;
-    originalPrice: number;
-    offer: string;
-    title: string;
-    description: string;
-    id: string;
-  };
-  CartScreen: undefined;
-  FavoritesScreen: undefined;
-  MapScreen: undefined;
-  ProductDetailsScreen: {
-    id: string;
-    title: string;
-    description: string;
-    price: string;
-    offer: string;
-    originalprice: number;
-    keywords: string;
-    image: string;
-  }[];
 };
 
 type ProductDetailsScreenNavigationProp = StackNavigationProp<
@@ -55,8 +30,6 @@ const JewellaryItem: React.FC<JewellaryItemProps> = ({image, title}) => {
     <TouchableOpacity
       style={{justifyContent: 'center', alignItems: 'center'}}
       onPress={() => {
-        console.log('first', title);
-        // console.log(dummyData[title]);
         navigation.navigate('ProductDetailsScreen', dummyData[title]);
       }}>
       <View style={styles.item}>

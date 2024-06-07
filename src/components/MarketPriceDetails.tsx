@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import DateTimePicker from './DateTimePicker';
+import {RootStackParamList} from '../props/prop';
 
 type Item = {
   title: string;
@@ -30,32 +31,6 @@ const items: Item[] = [
   },
 ];
 
-type RootStackParamList = {
-  HomeScreen: undefined;
-  CardDetails: {
-    image: string;
-    price: number;
-    originalPrice: number;
-    offer: string;
-    title: string;
-    description: string;
-    id: string;
-  };
-  CartScreen: undefined;
-  FavoritesScreen: undefined;
-  MapScreen: undefined;
-  ProductDetailsScreen: {
-    id: string;
-    title: string;
-    description: string;
-    price: string;
-    offer: string;
-    originalprice: number;
-    keywords: string;
-    image: string;
-  }[];
-};
-
 type MapScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   'MapScreen'
@@ -65,8 +40,6 @@ const MarketPriceDetails: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<Item>(items[0]);
   const navigation = useNavigation<MapScreenNavigationProp>();
   const [openDateTimePicker, setOpenDateTimePicker] = useState<boolean>(false);
-
-  console.log(openDateTimePicker);
 
   const handleDateTimePicker = () => {
     setOpenDateTimePicker(prevState => !prevState);
@@ -79,7 +52,6 @@ const MarketPriceDetails: React.FC = () => {
         defaultValue={selectedItem}
         onSelect={(selectedItem, index) => {
           setSelectedItem(selectedItem);
-          console.log(selectedItem, index);
         }}
         renderButton={(selectedItem, isOpen) => (
           <View style={styles.dropdownButtonStyle}>

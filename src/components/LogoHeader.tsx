@@ -7,32 +7,7 @@ import ShoppingBagIcon from 'react-native-vector-icons/Feather';
 import MenuIcon from 'react-native-vector-icons/Feather';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-
-type RootStackParamList = {
-  HomeScreen: undefined;
-  CardDetails: {
-    image: string;
-    price: number;
-    originalPrice: number;
-    offer: string;
-    title: string;
-    description: string;
-    id: string;
-  };
-  CartScreen: undefined;
-  FavoritesScreen: undefined;
-  MapScreen: undefined;
-  ProductDetailsScreen: {
-    id: string;
-    title: string;
-    description: string;
-    price: string;
-    offer: string;
-    originalprice: number;
-    keywords: string;
-    image: string;
-  }[];
-};
+import {RootStackParamList} from '../props/prop';
 
 type CartScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -62,7 +37,10 @@ const LogoHeader: React.FC = () => {
         <TouchableOpacity>
           <StarIcon name="star-o" size={23} color="#900" style={styles.icon} />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('UserScreen');
+          }}>
           <AccountIcon
             name="account-outline"
             size={26}

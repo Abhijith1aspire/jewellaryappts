@@ -15,7 +15,6 @@ const initialState: FavState = {
 const favReducer = (state: FavState = initialState, action: Action): FavState => {
   switch (action.type) {
       case ADD_TO_FAV:
-        console.log('state fav',state.items)
       return {
         ...state,
         items: [...state.items, ...action.payload.items],

@@ -6,7 +6,8 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useDispatch, useSelector} from 'react-redux';
 import {addToFav} from '../screens/FavoritesScreen/action';
-import {isItemInCart} from '../../utils';
+import {isItemInCart} from '../utils/utils';
+import RootStackParamList from '../props/prop';
 
 type CarditemProps = {
   image: string;
@@ -17,32 +18,6 @@ type CarditemProps = {
   description: string;
   id: string;
   keywords: string;
-};
-
-type RootStackParamList = {
-  HomeScreen: undefined;
-  CardDetails: {
-    image: string;
-    price: number;
-    originalPrice: number;
-    offer: string;
-    title: string;
-    description: string;
-    id: string;
-  };
-  CartScreen: undefined;
-  FavoritesScreen: undefined;
-  MapScreen: undefined;
-  ProductDetailsScreen: {
-    id: string;
-    title: string;
-    description: string;
-    price: string;
-    offer: string;
-    originalprice: number;
-    keywords: string;
-    image: string;
-  }[];
 };
 
 type CardDetailScreenNavigationProp = StackNavigationProp<
@@ -147,6 +122,7 @@ const JewelleryItemRow: React.FC<CarditemProps> = ({
 
 const Card: React.FC<CardProps> = ({searchText = '', data}) => {
   const [filteredData, setFilteredData] = useState(data);
+
   useEffect(() => {
     if (searchText === '') {
       setFilteredData(data);

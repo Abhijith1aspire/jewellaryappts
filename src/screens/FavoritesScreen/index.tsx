@@ -11,6 +11,7 @@ import {
 import {StackNavigationProp} from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '../../props/prop';
 
 type FavItemProps = {
   image: string;
@@ -20,32 +21,6 @@ type FavItemProps = {
   originalprice: number;
   description: string;
   offer: string;
-};
-
-type RootStackParamList = {
-  HomeScreen: undefined;
-  CardDetails: {
-    image: string;
-    price: number;
-    originalPrice: number;
-    offer: string;
-    title: string;
-    description: string;
-    id: string;
-  };
-  CartScreen: undefined;
-  FavoritesScreen: undefined;
-  MapScreen: undefined;
-  ProductDetailsScreen: {
-    id: string;
-    title: string;
-    description: string;
-    price: string;
-    offer: string;
-    originalprice: number;
-    keywords: string;
-    image: string;
-  }[];
 };
 
 type HomeScreenNavigationProp = StackNavigationProp<

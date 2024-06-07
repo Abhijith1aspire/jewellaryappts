@@ -11,32 +11,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import Search from '../../components/Search';
-
-type RootStackParamList = {
-  HomeScreen: undefined;
-  CardDetails: {
-    image: string;
-    price: number;
-    originalPrice: number;
-    offer: string;
-    title: string;
-    description: string;
-    id: string;
-  };
-  CartScreen: undefined;
-  FavoritesScreen: undefined;
-  MapScreen: undefined;
-  ProductDetailsScreen: {
-    id: string;
-    title: string;
-    description: string;
-    price: string;
-    offer: string;
-    originalprice: number;
-    keywords: string;
-    image: string;
-  }[];
-};
+import {RootStackParamList} from '../../props/prop';
 
 type ProductDetailScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -52,7 +27,6 @@ const ProductDetailScreen: React.FC = () => {
   const navigation = useNavigation<ProductDetailScreenNavigationProp>();
   const route = useRoute<ProductDetailScreenRouteProp>();
   const jewelryItems = route?.params;
-  console.log(jewelryItems);
   const [searchText, setSearchText] = useState<string>('');
 
   return (

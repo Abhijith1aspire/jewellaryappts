@@ -1,38 +1,15 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import HomeScreen from './src/screens/HomeScreen';
-import CardDetails from './src/screens/CardDetails';
-import CartScreen from './src/screens/CartScreen';
-import FavoritesScreen from './src/screens/FavoritesScreen';
-import MapScreen from './src/screens/MapScreen';
-import ProductDetailsScreen from './src/screens/ProductDetailsScreen';
-
-type RootStackParamList = {
-  HomeScreen: undefined;
-  CardDetails: {
-    image: string;
-    price: number;
-    originalPrice: number;
-    offer: string;
-    title: string;
-    description: string;
-    id: string;
-  };
-  CartScreen: undefined;
-  FavoritesScreen: undefined;
-  MapScreen: undefined;
-  ProductDetailsScreen: {
-    id: string;
-    title: string;
-    description: string;
-    price: string;
-    offer: string;
-    originalprice: number;
-    keywords: string;
-    image: string;
-  }[];
-};
+import HomeScreen from '../screens/HomeScreen';
+import CardDetails from '../screens/CardDetails';
+import CartScreen from '../screens/CartScreen';
+import FavoritesScreen from '../screens/FavoritesScreen';
+import MapScreen from '../screens/MapScreen';
+import ProductDetailsScreen from '../screens/ProductDetailsScreen';
+import UserScreen from '../screens/UsersScreen';
+import ProfileDetailsScreen from '../screens/ProfileDetailsScreen';
+import {RootStackParamList} from '../props/prop';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -59,6 +36,11 @@ const AppNavigator: React.FC = () => {
             <Stack.Screen name="CartScreen" component={CartScreen} />
             <Stack.Screen name="FavoritesScreen" component={FavoritesScreen} />
             <Stack.Screen name="MapScreen" component={MapScreen} />
+            <Stack.Screen name="UserScreen" component={UserScreen} />
+            <Stack.Screen
+              name="ProfileDetailsScreen"
+              component={ProfileDetailsScreen}
+            />
           </>
         )}
       </Stack.Navigator>

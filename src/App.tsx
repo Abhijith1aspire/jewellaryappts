@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 import React from 'react';
-import AppNavigator from './AppNavigator';
+import AppNavigator from './navigation/AppNavigator';
 import 'react-native-gesture-handler';
 import {Provider} from 'react-redux';
 import store from './store/store';

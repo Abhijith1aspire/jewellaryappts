@@ -5,12 +5,13 @@ type ButtonProps = {
   title: string;
   onPress: () => void;
   color?: string;
+  minWidth?: number;
 };
 
-const Button: React.FC<ButtonProps> = ({title, onPress, color}) => {
+const Button: React.FC<ButtonProps> = ({title, onPress, color, minWidth}) => {
   return (
     <TouchableOpacity
-      style={[styles.button, {backgroundColor: color}]}
+      style={[styles.button, {backgroundColor: color, minWidth: minWidth}]}
       onPress={onPress}>
       <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
@@ -21,7 +22,7 @@ export default Button;
 
 const styles = StyleSheet.create({
   button: {
-    paddingVertical: 10,
+    paddingVertical: 8,
     paddingHorizontal: 30,
     borderRadius: 10,
     minWidth: 180,

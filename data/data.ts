@@ -709,3 +709,93 @@ export const dummyData: JewelryTypeData = {
   ]
 };
 
+export interface AdditionalField {
+  image: string;
+  title: string;
+  subtitle: null;
+  link: null;
+  linkText: string | null;
+  content: string | null;
+}
+
+export interface SliderData {
+  title: string;
+  type: string;
+  backgroundImage: string | null;
+  backgroundColor: string | null;
+  heroBanner: number;
+  sortOrder: number;
+  additionalFields: AdditionalField[];
+}
+
+
+export const sliderData:SliderData[]= [
+    {
+        "backgroundColor": "white",
+        "backgroundImage": null,
+        "heroBanner": 0,
+        "sortOrder": 0,
+        "title": "Top Slider",
+        "type": "slider",
+        "additionalFields": [
+            {
+                "content": null,
+                "image": "import/images/tms/t/o/top_slider.png",
+                "link": null,
+                "linkText": null,
+                "subtitle": null,
+                "title": "Top Slider 1"
+            },
+            {
+                "content": null,
+                "image": "import/images/tms/t/o/top_2.jpg",
+                "link": null,
+                "linkText": null,
+                "subtitle": null,
+                "title": "Top Slider 2"
+            },
+            {
+                "content": null,
+                "image": "import/images/tms/t/o/top_slider_3.jpg",
+                "link": null,
+                "linkText": null,
+                "subtitle": null,
+                "title": "Top Slider 3"
+            }
+        ]
+    },
+    {
+        "backgroundColor": null,
+        "backgroundImage": "import/images/tms/b/a/background_checkout_our.jpg",
+        "heroBanner": 0,
+        "sortOrder": 0,
+        "title": "Checkout our online offers",
+        "type": "slider",
+        "additionalFields": [
+            {
+                "content": "on diamond & uncut diamond values",
+                "image": "import/images/tms/c/h/checkour_1.jpeg",
+                "link": null,
+                "linkText": "View Collection",
+                "subtitle": null,
+                "title": "Upto 25% off"
+            },
+            {
+                "content": "on diamond & uncut diamond values",
+                "image": "import/images/tms/c/h/checkour_2.jpeg",
+                "link": null,
+                "linkText": "View Collection",
+                "subtitle": null,
+                "title": "Upto 25% off"
+            },
+            {
+                "content": "on diamond & uncut diamond values",
+                "image": "import/images/tms/c/h/checkour_3.jpeg",
+                "link": null,
+                "linkText": "View Collection",
+                "subtitle": null,
+                "title": "Upto 25% off"
+            }
+        ]
+    }
+]
