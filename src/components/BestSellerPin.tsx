@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 const BestSellerPin: React.FC = () => {
   return (
     <View style={styles.container}>
-      <Icon name="star" size={18} color="#900" />
+      <Icon name="star" size={18} color="#5d1115" />
       <Text style={styles.text}>BEST SELLER</Text>
     </View>
   );
@@ -21,13 +21,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 0.5,
-    borderColor: '#900',
+    borderColor: '#5d1115',
     flexDirection: 'row',
     marginRight: 20,
     borderRadius: 5,
   },
   text: {
-    color: '#900',
+    color: '#5d1115',
     fontSize: 10,
     textAlign: 'center',
     marginLeft: 5,

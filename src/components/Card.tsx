@@ -66,10 +66,10 @@ const JewelleryItemRow: React.FC<CarditemProps> = ({
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style={{flexDirection: 'row'}}>
           <TouchableOpacity style={styles.iconContainer}>
-            <Icon name="bookmark" size={18} color="#900" />
+            <Icon name="bookmark" size={18} color="#5d1115" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.iconContainer}>
-            <Icon name="star" size={18} color="#900" />
+            <Icon name="star" size={18} color="#5d1115" />
           </TouchableOpacity>
         </View>
         <TouchableOpacity
@@ -99,7 +99,7 @@ const JewelleryItemRow: React.FC<CarditemProps> = ({
             name="hearto"
             size={18}
             style={{marginRight: 10, marginTop: 20}}
-            color="#900"
+            color="#5d1115"
           />
         </TouchableOpacity>
       </View>
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginTop: 5,
-    color: '#900',
+    color: '#5d1115',
     marginLeft: 10,
   },
   originalpriceText: {
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
   offerText: {
     fontSize: 13,
     marginVertical: 5,
-    color: '#900',
+    color: '#5d1115',
     marginLeft: 10,
   },
 });

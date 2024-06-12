@@ -101,7 +101,10 @@ const CardDetails: React.FC<CardDetailsProps> = ({route}) => {
               );
             }
           }}
-          color="#900"
+          color="#5d1115"
+          minWidth={200}
+          textColor="#FDF2F2"
+          borderRadius={20}
         />
         <Button
           title="Add to favorites"
@@ -128,7 +131,10 @@ const CardDetails: React.FC<CardDetailsProps> = ({route}) => {
               console.log('Selected Item has been added to your favorites');
             }
           }}
-          color="#900"
+          color="#5d1115"
+          minWidth={200}
+          textColor="#FDF2F2"
+          borderRadius={20}
         />
       </View>
       <View style={{marginTop: 10}}>
@@ -138,6 +144,8 @@ const CardDetails: React.FC<CardDetailsProps> = ({route}) => {
             navigation.navigate('CartScreen');
           }}
           color="black"
+          minWidth={200}
+          textColor="#FDF2F2"
         />
       </View>
     </View>

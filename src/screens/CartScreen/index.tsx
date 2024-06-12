@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
   },
   emptyCartText: {
     fontSize: 18,
-    color: '#900',
+    color: '#5d1115',
     textAlign: 'center',
     marginTop: 20,
   },
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
     height: 60,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#900',
+    backgroundColor: '#5d1115',
   },
   totalText: {
     fontSize: 18,

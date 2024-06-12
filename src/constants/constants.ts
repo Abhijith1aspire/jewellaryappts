@@ -1,0 +1,1 @@
+export const placeHolderImage='https://media-demo.grtjewels.com/placeholder/default/grt-placeholder.gif';

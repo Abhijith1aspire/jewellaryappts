@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   itemCountText: {
-    color: '#900',
+    color: '#5d1115',
     fontSize: 14,
     textAlign: 'center',
     height: 30,

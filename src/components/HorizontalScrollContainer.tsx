@@ -7,10 +7,10 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import React from 'react';
-import {jewellary} from '../../data/data';
+import {jewellary} from '../data/data';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {dummyData} from '../../data/data';
+import {dummyData} from '../data/data';
 import {RootStackParamList} from '../props/prop';
 
 type JewellaryItemProps = {
@@ -38,7 +38,7 @@ const JewellaryItem: React.FC<JewellaryItemProps> = ({image, title}) => {
           style={{width: 80, height: 80, resizeMode: 'stretch'}}
         />
       </View>
-      <Text style={{fontSize: 14, color: '#900', fontWeight: '600'}}>
+      <Text style={{fontSize: 14, color: '#5d1115', fontWeight: '600'}}>
         {title}
       </Text>
     </TouchableOpacity>
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 5,
     marginBottom: 10,
-    borderColor: '#900',
+    borderColor: '#5d1115',
     borderWidth: 0.2,
   },
 });

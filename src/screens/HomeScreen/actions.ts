@@ -16,32 +16,54 @@ export const fetchData = (): ThunkAction<void, RootState, unknown, FetchDataType
     })
     .catch(error => {
       console.error(error);
+      dispatch({ type: FETCH_BANNER_DETAILS, payload: {error:"Something went wrong"} });
     });
 };
 
 const getBannerDetails = () => {
   const data = JSON.stringify({
-    query: `query GetTemplateList {
-      getTemplateList(identifier: "home_page") {
-          identifier
-          items {
-              backgroundColor
-              backgroundImage
-              heroBanner
-              sortOrder
-              title
-              type
-              additionalFields {
-                  content
-                  image
-                  link
-                  linkText
-                  subtitle
-                  title
-              }
-          }
+    query: `query {
+  getTemplateList(identifier: "home_page") {
+    identifier
+    items {
+      title
+      type
+      sortOrder
+      tabGroup
+      tabTitle
+      tabSortOrder
+      cssClass
+      link
+      linkText
+      backgroundImage
+      backgroundColor
+      heroBanner
+      additionalFields {
+        image
+        title
+        subtitle
+        link
+        linkText
+        content
       }
-  }`,
+      tabItems {
+        tabTitle
+        backgroundImage
+        backgroundColor
+        heroBanner
+        tabSortOrder
+        additionalFields {
+          image
+          title
+          subtitle
+          link
+          linkText
+          content
+        }
+      }
+    }
+  }
+}`,
     variables: {}
   });
 

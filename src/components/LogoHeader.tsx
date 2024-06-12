@@ -24,7 +24,7 @@ const LogoHeader: React.FC = () => {
           <MenuIcon
             name="menu"
             size={25}
-            color="#900"
+            color="#5d1115"
             style={[styles.icon, {marginLeft: 0}]}
           />
         </TouchableOpacity>
@@ -35,7 +35,12 @@ const LogoHeader: React.FC = () => {
       </View>
       <View style={styles.iconContainer}>
         <TouchableOpacity>
-          <StarIcon name="star-o" size={23} color="#900" style={styles.icon} />
+          <StarIcon
+            name="star-o"
+            size={23}
+            color="#5d1115"
+            style={styles.icon}
+          />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
@@ -44,19 +49,24 @@ const LogoHeader: React.FC = () => {
           <AccountIcon
             name="account-outline"
             size={26}
-            color="#900"
+            color="#5d1115"
             style={styles.icon}
           />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => navigation.navigate('FavoritesScreen')}>
-          <LikeIcon name="hearto" size={22} color="#900" style={styles.icon} />
+          <LikeIcon
+            name="hearto"
+            size={22}
+            color="#5d1115"
+            style={styles.icon}
+          />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('CartScreen')}>
           <ShoppingBagIcon
             name="shopping-bag"
             size={22}
-            color="#900"
+            color="#5d1115"
             style={styles.icon}
           />
         </TouchableOpacity>

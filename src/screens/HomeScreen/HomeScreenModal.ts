@@ -6,7 +6,16 @@ export interface AdditionalField {
     linkText: string | null;
     content: string | null;
   }
-  
+
+  export interface TabItem {
+    backgroundImage: string|null;
+    tabTitle: string|null;
+    backgroundCOlor:string|null;
+    additionalFields:AdditionalField[]
+  }
+
+
+
   export interface SliderData {
     title: string;
     type: string;
@@ -14,7 +23,12 @@ export interface AdditionalField {
     backgroundColor: string | null;
     heroBanner: number;
     sortOrder: number;
-    additionalFields: AdditionalField[];
+    additionalFields?: AdditionalField[];
+    tabItems?:TabItem[];
+    cssClass?:String
+    tabGroup?:string|null
+    link?:string|null;
+    linkText?:string|null;
   }
 
   export interface HomePageBannerData {

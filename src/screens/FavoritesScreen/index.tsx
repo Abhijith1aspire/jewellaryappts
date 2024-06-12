@@ -102,7 +102,7 @@ const FavoritesScreen: React.FC = () => {
         <Text style={styles.title}>Favorites</Text>
       </View>
       {favItems.length === 0 && (
-        <Text style={{fontSize: 18, color: '#900'}}>
+        <Text style={{fontSize: 18, color: '#5d1115'}}>
           Please add some items to your favorites!
         </Text>
       )}
