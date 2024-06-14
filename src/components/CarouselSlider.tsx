@@ -6,21 +6,27 @@ import {
   Dimensions,
   FlatList,
   Text,
+  ImageBackground,
 } from 'react-native';
 import {AdditionalField} from '../screens/HomeScreen/HomeScreenModal';
 import {placeHolderImage} from '../constants/constants';
+import {horizontalScale, verticalScale, moderateScale} from '../utils/Metrics';
 
 type SliderProps = {
-  backgroundColor: string | null;
+  backgroundColor?: string | null;
   data?: AdditionalField[];
   backgroundImage?: string | null;
 };
 
 const {height, width} = Dimensions.get('window');
+const imageHeight = height * 0.45;
 
-const CarouselSlider: React.FC<SliderProps> = ({backgroundColor, data}) => {
+const CarouselSlider: React.FC<SliderProps> = ({
+  backgroundColor,
+  data,
+  backgroundImage,
+}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const imageHeight = height * 0.4;
 
   const validData = data?.filter(
     item =>
@@ -48,10 +54,10 @@ const CarouselSlider: React.FC<SliderProps> = ({backgroundColor, data}) => {
     </View>
   );
 
-  return (
-    <View style={[styles.container, {backgroundColor: backgroundColor}]}>
+  const renderFlatList = () => (
+    <View>
       {validData && validData.length > 0 ? (
-        <>
+        <View>
           <FlatList
             data={validData}
             renderItem={renderItem}
@@ -75,23 +81,59 @@ const CarouselSlider: React.FC<SliderProps> = ({backgroundColor, data}) => {
               />
             ))}
           </View>
-        </>
+        </View>
       ) : (
         <Text style={styles.noDataText}>No offers available</Text>
       )}
     </View>
+  );
+
+  return (
+    <>
+      {backgroundImage && backgroundImage.trim().length > 0 ? (
+        <ImageBackground
+          source={{uri: `https://media-demo.grtjewels.com/${backgroundImage}`}}
+          style={[styles.container, styles.backgroundImage]}
+          resizeMode="cover">
+          {renderFlatList()}
+        </ImageBackground>
+      ) : (
+        <View
+          style={[
+            styles.container,
+            styles.backgroundView,
+            {
+              backgroundColor:
+                backgroundColor && backgroundColor.trim().length > 0
+                  ? backgroundColor
+                  : 'white',
+            },
+          ]}>
+          {renderFlatList()}
+        </View>
+      )}
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginBottom: 20,
+    marginBottom: verticalScale(20),
+  },
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
+  },
+  backgroundView: {
+    flex: 1,
+    backgroundColor: 'white',
   },
   slide: {
     width: width,
-    justifyContent: 'center',
     alignItems: 'center',
+    marginTop: verticalScale(20),
   },
   image: {
     width: '100%',
@@ -102,25 +144,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    bottom: 10,
+    top: imageHeight - 10,
     left: 0,
     right: 0,
   },
   indicator: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
+    width: verticalScale(6),
+    height: horizontalScale(6),
+    borderRadius: moderateScale(3),
     backgroundColor: 'pink',
-    marginLeft: 5,
+    marginLeft: horizontalScale(5),
   },
   currentIndicator: {
-    width: 20,
-    height: 8,
-    borderRadius: 4,
+    width: horizontalScale(20),
+    height: verticalScale(8),
+    borderRadius: moderateScale(4),
     backgroundColor: 'white',
   },
   noDataText: {
-    fontSize: 18,
+    fontSize: (18 * width * 0.037) / 14,
     color: '#5d1115',
     textAlign: 'center',
     marginVertical: 20,

@@ -1,14 +1,6 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 
-const buttonData = [
-  {title: 'Rings'},
-  {title: 'Bangles'},
-  {title: 'Earrings'},
-  {title: 'Casual wear'},
-  {title: 'Diamonds'},
-];
-
 const Buttons = ({title, isSelected, onPress}) => {
   const buttonColor = isSelected ? '#5d1115' : '#FDF2F2';
   const textColor = isSelected ? '#FDF2F2' : '#5d1115';
@@ -30,8 +22,10 @@ const Buttons = ({title, isSelected, onPress}) => {
   );
 };
 
-const BannerButtons = ({onSelectItem}) => {
-  const [selectedButton, setSelectedButton] = useState<string | null>(null);
+const BannerButtons = ({onSelectItem, buttonData}) => {
+  const [selectedButton, setSelectedButton] = useState<string | null>(
+    buttonData[0],
+  );
 
   const handlePress = (title: string) => {
     setSelectedButton(selectedButton === title ? null : title);
@@ -43,9 +37,9 @@ const BannerButtons = ({onSelectItem}) => {
       {buttonData.map((item, index) => (
         <Buttons
           key={index.toString()}
-          title={item.title}
-          isSelected={item.title === selectedButton}
-          onPress={() => handlePress(item.title)}
+          title={item}
+          isSelected={item === selectedButton}
+          onPress={() => handlePress(item)}
         />
       ))}
     </View>

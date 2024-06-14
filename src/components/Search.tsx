@@ -1,12 +1,21 @@
-import {StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
+import {
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+  Dimensions,
+} from 'react-native';
 import SearchIcon from 'react-native-vector-icons/Ionicons';
 import CameraIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MicIcon from 'react-native-vector-icons/Feather';
+import {verticalScale, moderateScale} from '../utils/Metrics';
 
 type SearchProps = {
   onSearch: (text: string) => void;
 };
+
+const {width, height} = Dimensions.get('window');
 
 const Search: React.FC<SearchProps> = ({onSearch}) => {
   const [searchText, setSearchText] = useState<string>('');
@@ -19,7 +28,11 @@ const Search: React.FC<SearchProps> = ({onSearch}) => {
   return (
     <View style={styles.container}>
       <View style={styles.leftContainer}>
-        <SearchIcon name="search" size={24} style={styles.icon} />
+        <SearchIcon
+          name="search"
+          size={moderateScale(24)}
+          style={styles.icon}
+        />
         <TextInput
           style={styles.input}
           placeholder="Search"
@@ -29,10 +42,14 @@ const Search: React.FC<SearchProps> = ({onSearch}) => {
       </View>
       <View style={styles.rightContainer}>
         <TouchableOpacity>
-          <CameraIcon name="camera-outline" size={24} style={styles.icon} />
+          <CameraIcon
+            name="camera-outline"
+            size={moderateScale(24)}
+            style={styles.icon}
+          />
         </TouchableOpacity>
         <TouchableOpacity>
-          <MicIcon name="mic" size={24} style={styles.icon} />
+          <MicIcon name="mic" size={moderateScale(24)} style={styles.icon} />
         </TouchableOpacity>
       </View>
     </View>
@@ -43,15 +60,15 @@ export default Search;
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
-    height: 46,
+    width: width * 0.95,
+    height: verticalScale(49),
     borderRadius: 5,
-    paddingHorizontal: 10,
+    paddingHorizontal: verticalScale(10),
     backgroundColor: '#FDF2F2',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: moderateScale(10),
   },
   leftContainer: {
     flexDirection: 'row',
@@ -63,10 +80,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   icon: {
-    marginHorizontal: 5,
+    marginHorizontal: moderateScale(5),
   },
   input: {
     flex: 1,
-    fontSize: 16,
+    fontSize: width * 0.037,
+    marginLeft: moderateScale(10),
   },
 });

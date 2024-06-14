@@ -7,23 +7,29 @@ import {
   Dimensions,
   FlatList,
   TouchableOpacity,
+  ImageBackground,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {AdditionalField} from '../data/data';
-import {placeHolderImage} from '../constants/constants'; // Ensure you import the placeholder image
+import {placeHolderImage} from '../constants/constants';
+import {horizontalScale, moderateScale, verticalScale} from '../utils/Metrics';
 
 type HalfStaticProps = {
   headerTitle: string | null;
   backgroundColor: string | null;
   data: AdditionalField[] | undefined;
+  backgroundImage: string | null;
 };
 
-const {width} = Dimensions.get('window');
-const itemWidth = width - 60;
+const {width, height} = Dimensions.get('window');
+const itemWidth = width - horizontalScale(60);
+const slideHeight = height * 0.52;
 
 const GiftsHalfStaticButton: React.FC<HalfStaticProps> = ({
   data,
   headerTitle,
+  backgroundColor,
+  backgroundImage,
 }) => {
   const validData = data?.filter(
     item =>
@@ -68,29 +74,58 @@ const GiftsHalfStaticButton: React.FC<HalfStaticProps> = ({
       style={styles.button}
       onPress={() => console.log('Shop Now')}>
       <Text style={styles.buttonText}>{text}</Text>
-      <Icon name="arrowright" size={22} color="#5d1115" />
+      <Icon name="arrowright" size={moderateScale(22)} color="#5d1115" />
     </TouchableOpacity>
   );
 
+  const renderFlatList = () => {
+    return (
+      <>
+        {headerTitle && <Text style={styles.headerText}>{headerTitle}</Text>}
+        {validData && validData.length > 0 ? (
+          <FlatList
+            data={validData}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            snapToInterval={itemWidth}
+            decelerationRate="fast"
+            contentContainerStyle={styles.flatListContainer}
+          />
+        ) : (
+          <Text style={styles.noDataText}>No offers available</Text>
+        )}
+      </>
+    );
+  };
+
   return (
-    <View style={styles.container}>
-      {headerTitle && <Text style={styles.headerText}>{headerTitle}</Text>}
-      {validData && validData.length > 0 ? (
-        <FlatList
-          data={validData}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          snapToInterval={itemWidth}
-          decelerationRate="fast"
-          contentContainerStyle={styles.flatListContainer}
-        />
+    <>
+      {backgroundImage && backgroundImage.trim().length > 0 ? (
+        <ImageBackground
+          source={{uri: `https://media-demo.grtjewels.com/${backgroundImage}`}}
+          style={[styles.container, styles.backgroundImage]}
+          resizeMode="cover">
+          {renderFlatList()}
+        </ImageBackground>
       ) : (
-        <Text style={styles.noDataText}>No offers available</Text>
+        <View
+          style={[
+            styles.container,
+            styles.backgroundView,
+            {
+              backgroundColor:
+                backgroundColor && backgroundColor.trim().length > 0
+                  ? backgroundColor
+                  : 'white',
+            },
+          ]}>
+          {renderFlatList()}
+        </View>
       )}
-    </View>
+    </>
   );
 };
 
@@ -98,30 +133,39 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#e3bc8c',
-    paddingVertical: 30,
+    paddingVertical: verticalScale(30),
+  },
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
+  },
+  backgroundView: {
+    flex: 1,
+    backgroundColor: 'white',
   },
   headerText: {
-    fontSize: 26,
+    fontSize: moderateScale(24),
     fontWeight: '400',
     textAlign: 'center',
-    marginVertical: 10,
+    marginVertical: verticalScale(10),
     color: '#5d1115',
-    paddingHorizontal: 50,
-    marginBottom: 20,
+    paddingHorizontal: horizontalScale(50),
+    marginBottom: verticalScale(20),
   },
   slide: {
     width: itemWidth,
+    height: slideHeight,
     backgroundColor: '#fbecdf',
-    marginHorizontal: 7,
-    borderRadius: 8,
-    padding: 7,
-    borderWidth: 0.2,
+    marginHorizontal: horizontalScale(7),
+    borderRadius: moderateScale(8),
+    padding: horizontalScale(7),
   },
   imageContainer: {
     width: '100%',
-    height: 188,
+    height: '52%',
     overflow: 'hidden',
-    borderRadius: 8,
+    borderRadius: moderateScale(8),
   },
   image: {
     width: '100%',
@@ -129,50 +173,49 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   contentContainer: {
+    flex: 1,
     width: '70%',
-    padding: 10,
-    textAlign: 'left',
+    padding: horizontalScale(10),
     alignSelf: 'flex-start',
   },
   title: {
-    fontSize: 20,
+    fontSize: (22 * itemWidth * 0.037) / 14,
     fontWeight: '600',
-    marginTop: 10,
     color: '#5d1115',
     textAlign: 'left',
+    flex: 1,
   },
   content: {
-    fontSize: 14,
+    fontSize: itemWidth * 0.037,
     color: '#5d1115',
     fontWeight: '500',
-    marginTop: 10,
-    marginBottom: 4,
+    marginTop: verticalScale(10),
+    flex: 1,
   },
   button: {
     backgroundColor: '#f59090',
-    paddingHorizontal: 4,
-    paddingVertical: 5,
-    borderRadius: 4,
-    marginTop: 25,
-    width: 126,
+    borderRadius: moderateScale(4),
+    marginVertical: verticalScale(20),
+    width: itemWidth / 3,
+    height: slideHeight / 14,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
   buttonText: {
-    fontSize: 15,
+    fontSize: (15 * itemWidth * 0.037) / 14,
     fontWeight: '600',
     color: '#5d1115',
-    marginHorizontal: 10,
+    marginHorizontal: horizontalScale(10),
   },
   flatListContainer: {
-    paddingHorizontal: 10,
+    paddingHorizontal: horizontalScale(10),
   },
   noDataText: {
-    fontSize: 18,
+    fontSize: moderateScale(18),
     color: '#5d1115',
     textAlign: 'center',
-    marginVertical: 20,
+    marginVertical: verticalScale(20),
   },
 });
 

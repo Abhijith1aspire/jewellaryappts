@@ -106,7 +106,9 @@ const FavoritesScreen: React.FC = () => {
           Please add some items to your favorites!
         </Text>
       )}
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContent}
+        showsVerticalScrollIndicator={false}>
         {favItems &&
           favItems.map(item => (
             <FavItem
@@ -147,7 +149,6 @@ const styles = StyleSheet.create({
     width: '98%',
     height: 80,
     flexDirection: 'row',
-    borderWidth: 0.5,
     borderRadius: 5,
     backgroundColor: '#FDF2F2',
     alignItems: 'center',

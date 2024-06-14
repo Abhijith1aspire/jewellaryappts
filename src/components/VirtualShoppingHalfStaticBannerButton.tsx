@@ -6,23 +6,28 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  ImageBackground,
 } from 'react-native';
 import {AdditionalField} from '../data/data';
 import {placeHolderImage} from '../constants/constants';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {moderateScale, verticalScale} from '../utils/Metrics';
 
 type HalfStaticProps = {
   headerTitle: string | null;
   backgroundColor: string | null;
   data: AdditionalField[] | undefined;
+  backgroundImage: string | null;
 };
 
 const {width, height} = Dimensions.get('window');
-const itemWidth = width - 40;
+const itemWidth = width - moderateScale(40);
 
 const VirtualShoppingHalfStaticBannerButton: React.FC<HalfStaticProps> = ({
   data,
   headerTitle,
+  backgroundColor,
+  backgroundImage,
 }) => {
   const validData = data?.filter(
     item =>
@@ -84,7 +89,7 @@ const VirtualShoppingHalfStaticBannerButton: React.FC<HalfStaticProps> = ({
       <View
         style={{
           width: '100%',
-          height: 100,
+          height: verticalScale(100),
           overflow: 'hidden',
         }}>
         {item?.image ? (
@@ -101,7 +106,7 @@ const VirtualShoppingHalfStaticBannerButton: React.FC<HalfStaticProps> = ({
           alignItems: 'center',
           justifyContent: 'center',
           width: '100%',
-          minHeight: 100,
+          minHeight: verticalScale(100),
         }}>
         {item.title && (
           <Text
@@ -133,9 +138,9 @@ const VirtualShoppingHalfStaticBannerButton: React.FC<HalfStaticProps> = ({
             {index === 0 && (
               <Icon
                 name="whatsapp"
-                size={14}
+                size={moderateScale(14)}
                 color="green"
-                style={{marginRight: 4}}
+                style={{marginRight: moderateScale(4)}}
               />
             )}
             <Text style={styles.subItemButtonText}>{item.linkText}</Text>
@@ -145,34 +150,76 @@ const VirtualShoppingHalfStaticBannerButton: React.FC<HalfStaticProps> = ({
     </View>
   );
 
+  const renderFlatList = () => {
+    return (
+      <>
+        {headerTitle && <Text style={styles.headerText}>{headerTitle}</Text>}
+        {validData && validData.length > 0 ? (
+          <>
+            <View style={styles.itemContainer}>{renderItem(validData[0])}</View>
+            <View style={{marginTop: moderateScale(10)}}>
+              {renderSubItems()}
+            </View>
+          </>
+        ) : (
+          <Text style={styles.noDataText}>No offers available</Text>
+        )}
+      </>
+    );
+  };
+
   return (
-    <View style={styles.container}>
-      {headerTitle && <Text style={styles.headerText}>{headerTitle}</Text>}
-      {validData && validData.length > 0 ? (
-        <>
-          <View style={styles.itemContainer}>{renderItem(validData[0])}</View>
-          <View style={{marginTop: 10}}>{renderSubItems()}</View>
-        </>
+    <>
+      {backgroundImage && backgroundImage.trim().length > 0 ? (
+        <ImageBackground
+          source={{uri: `https://media-demo.grtjewels.com/${backgroundImage}`}}
+          style={[styles.container, styles.backgroundImage]}
+          resizeMode="cover">
+          {renderFlatList()}
+        </ImageBackground>
       ) : (
-        <Text style={styles.noDataText}>No offers available</Text>
+        <View
+          style={[
+            styles.container,
+            styles.backgroundView,
+            {
+              backgroundColor:
+                backgroundColor && backgroundColor.trim().length > 0
+                  ? backgroundColor
+                  : 'white',
+            },
+          ]}>
+          {renderFlatList()}
+        </View>
       )}
-    </View>
+    </>
   );
 };
+
+const itemHeight = height * 0.45;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FDF2F2',
-    paddingVertical: 40,
+    paddingVertical: verticalScale(40),
     width: '100%',
     alignItems: 'center',
   },
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
+  },
+  backgroundView: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
   headerText: {
-    fontSize: 25,
+    fontSize: (24 * width * 0.037) / 14,
     fontWeight: '400',
     textAlign: 'center',
-    marginVertical: 10,
+    marginVertical: verticalScale(10),
     color: '#5d1115',
   },
   itemContainer: {
@@ -180,56 +227,53 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   slide: {
+    height: itemHeight,
     width: itemWidth,
     backgroundColor: '#FDF2F2',
-    marginHorizontal: 10,
-    borderRadius: 8,
-    borderWidth: 0.2,
-    marginBottom: 20,
-    minHeight: 385,
+    borderRadius: moderateScale(8),
+    marginBottom: verticalScale(20),
   },
   imageContainer: {
     width: '100%',
-    height: 200,
+    height: '50%',
     overflow: 'hidden',
   },
   image: {
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
-    borderRadius: 8,
+    borderRadius: moderateScale(8),
   },
   contentContainer: {
     flex: 1,
     alignItems: 'center',
-    padding: 10,
+    paddingTop: verticalScale(10),
   },
   title: {
-    fontSize: 28,
+    fontSize: (28 * width * 0.037) / 14,
     fontWeight: '400',
     color: '#fff',
   },
   content: {
-    fontSize: 14,
+    fontSize: width * 0.037,
     color: '#fff',
     fontWeight: '400',
     textAlign: 'center',
-    marginTop: 14,
+    marginTop: verticalScale(14),
     width: '60%',
-    marginBottom: 10,
   },
   button: {
     backgroundColor: '#fff',
-    width: 120,
-    height: 30,
-    borderRadius: 6,
-    marginTop: 20,
+    width: itemWidth * 0.3,
+    height: itemHeight * 0.08,
+    borderRadius: moderateScale(6),
+    marginTop: verticalScale(24),
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
   buttonText: {
-    fontSize: 15,
+    fontSize: (15 * width * 0.037) / 14,
     fontWeight: '600',
     color: '#5d1115',
   },
@@ -237,45 +281,51 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    paddingHorizontal: 10,
+    paddingHorizontal: moderateScale(10),
   },
   subItemContainer: {
     width: '48%',
-    marginBottom: 20,
+    marginBottom: verticalScale(20),
   },
   subItem: {
-    borderRadius: 8,
+    borderRadius: moderateScale(8),
     backgroundColor: '#fff',
-    maxHeight: 245,
-    minHeight: 245,
+    maxHeight: verticalScale(245),
+    minHeight: verticalScale(245),
     width: itemWidth / 2,
   },
   subItemTitle: {
-    fontSize: 16,
+    fontSize: (16 * width * 0.037) / 14,
     fontWeight: '500',
-    marginTop: 10,
+    marginTop: verticalScale(10),
     color: '#fff',
   },
   subItemContent: {
-    fontSize: 12,
+    fontSize: (12 * width * 0.037) / 14,
     color: '#fff',
     fontWeight: '500',
-    marginVertical: 10,
+    marginVertical: verticalScale(10),
     textAlign: 'center',
-    paddingHorizontal: 2,
+    paddingHorizontal: moderateScale(2),
   },
   subItemButton: {
     backgroundColor: '#fff',
-    borderRadius: 4,
-    width: 150,
-    height: 30,
+    borderRadius: moderateScale(4),
+    width: moderateScale(150),
+    height: verticalScale(30),
     justifyContent: 'center',
     alignItems: 'center',
   },
   subItemButtonText: {
-    fontSize: 12,
+    fontSize: moderateScale(12),
     fontWeight: '500',
     color: '#5d1115',
+  },
+  noDataText: {
+    fontSize: moderateScale(18),
+    color: '#5d1115',
+    textAlign: 'center',
+    marginVertical: verticalScale(20),
   },
 });
 

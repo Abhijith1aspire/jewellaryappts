@@ -10,15 +10,8 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {placeHolderImage} from '../constants/constants';
-
-type AdditionalField = {
-  type?: string;
-  title?: string;
-  subtitle?: string;
-  content?: string;
-  linkText?: string;
-  image?: string;
-};
+import {horizontalScale, verticalScale} from '../utils/Metrics';
+import {AdditionalField} from '../data/data';
 
 type OfferSliderProps = {
   headerTitle: string | null;
@@ -28,14 +21,18 @@ type OfferSliderProps = {
 };
 
 const {width, height} = Dimensions.get('window');
-const itemWidth = width / 2 - 15;
-const imageHeight = height * 0.17;
-const slideHeight = height * 0.34;
+const containerHeight = height * 0.55;
+const slideHeight = containerHeight * 0.65;
+const itemWidth = width * 0.46;
+const imageHeight = slideHeight * 0.5;
+const buttonContainerMarginBottom =
+  height > 700 ? verticalScale(20) : verticalScale(5);
 
 const OnlineOffersHalfSliderButton: React.FC<OfferSliderProps> = ({
-  backgroundImage = '',
+  backgroundImage,
   data,
   headerTitle,
+  backgroundColor,
 }) => {
   const Button = ({title, onPress, color}) => (
     <TouchableOpacity
@@ -48,10 +45,18 @@ const OnlineOffersHalfSliderButton: React.FC<OfferSliderProps> = ({
   const renderItem = ({item}: {item: AdditionalField}) => {
     if (item?.type === 'static') {
       return (
-        <View style={[styles.slide, styles.staticSlide, {height: slideHeight}]}>
-          <Text style={[styles.title, styles.staticSlideTitle]}>
-            {item.title}
-          </Text>
+        <View
+          style={[
+            styles.slide,
+            styles.staticSlide,
+            {height: slideHeight},
+            styles.shadowStyle,
+          ]}>
+          <View style={[styles.staticContentContainer]}>
+            <Text style={[styles.title, styles.staticSlideTitle]}>
+              {item.title}
+            </Text>
+          </View>
           <View style={styles.staticButtonContainer}>
             <TouchableOpacity
               style={styles.staticButton}
@@ -64,41 +69,56 @@ const OnlineOffersHalfSliderButton: React.FC<OfferSliderProps> = ({
     }
 
     return (
-      <View style={[styles.slide, {height: slideHeight}]}>
+      <View style={[styles.slide, {height: slideHeight}, styles.shadowStyle]}>
         <View style={[styles.imageContainer, {height: imageHeight}]}>
           {item.image ? (
             <Image
               source={{uri: `https://media-demo.grtjewels.com/${item.image}`}}
-              style={[styles.image, {height: imageHeight}]}
+              style={styles.image}
               resizeMode="cover"
             />
           ) : (
             <Image
-              source={{uri: placeHolderImage}}
-              style={[styles.image, {height: imageHeight}]}
+              source={{
+                uri: placeHolderImage,
+              }}
+              style={styles.image}
               resizeMode="cover"
             />
           )}
         </View>
-        {item?.title && <Text style={styles.title}>{item.title}</Text>}
-        {item?.subtitle && <Text style={styles.subtitle}>{item.subtitle}</Text>}
-        {item?.content && <Text style={styles.content}>{item.content}</Text>}
-        {item?.linkText && (
-          <View style={styles.buttonContainer}>
-            <Button
-              title={'View Offer'}
-              onPress={() => console.log('Check out the collection')}
-              color="#5d1115"
-            />
+        <View style={{height: slideHeight * 0.5, justifyContent: 'center'}}>
+          <View
+            style={{
+              marginVertical: slideHeight * 0.02,
+              height: slideHeight * 0.26,
+            }}>
+            {item?.title && <Text style={styles.title}>{item.title}</Text>}
+            {item?.content && (
+              <Text style={styles.content}>{item.content}</Text>
+            )}
           </View>
-        )}
+          {item?.linkText && (
+            <View
+              style={[
+                styles.buttonContainer,
+                {marginBottom: buttonContainerMarginBottom},
+              ]}>
+              <Button
+                title={'View Offer'}
+                onPress={() => console.log('Check out the collection')}
+                color="#5d1115"
+              />
+            </View>
+          )}
+        </View>
       </View>
     );
   };
 
   let validData: AdditionalField[] = [];
   if (data) {
-    validData = data?.filter(
+    validData = data.filter(
       item =>
         item.type ||
         item.title ||
@@ -115,11 +135,13 @@ const OnlineOffersHalfSliderButton: React.FC<OfferSliderProps> = ({
     ? [...limitedData, {type: 'static', title: 'Discover our online Offers'}]
     : [...validData];
 
-  return (
-    <ImageBackground
-      source={{uri: `https://media-demo.grtjewels.com/${backgroundImage}`}}
-      style={styles.backgroundImage}>
-      <View style={styles.container}>
+  const renderFlatList = () => {
+    return (
+      <View
+        style={[
+          styles.container,
+          {backgroundColor: headerTitle ? '#ffffff' : '#fdf4ef'},
+        ]}>
         {headerTitle && <Text style={styles.headerText}>{headerTitle}</Text>}
         {enhancedData && enhancedData.length > 0 ? (
           <FlatList
@@ -129,123 +151,145 @@ const OnlineOffersHalfSliderButton: React.FC<OfferSliderProps> = ({
             horizontal
             pagingEnabled
             showsHorizontalScrollIndicator={false}
-            snapToInterval={itemWidth * 2 + 20}
+            snapToInterval={itemWidth + horizontalScale(16)}
             decelerationRate="fast"
-            contentContainerStyle={{paddingHorizontal: 10}}
+            contentContainerStyle={{paddingHorizontal: horizontalScale(8)}}
           />
         ) : (
           <Text style={styles.noDataText}>No offers available</Text>
         )}
       </View>
-    </ImageBackground>
+    );
+  };
+  return (
+    <>
+      {backgroundImage && backgroundImage.trim().length > 0 ? (
+        <ImageBackground
+          source={{uri: `https://media-demo.grtjewels.com/${backgroundImage}`}}
+          style={styles.backgroundImage}>
+          {renderFlatList()}
+        </ImageBackground>
+      ) : (
+        <View
+          style={{
+            flex: 1,
+            backgroundColor:
+              backgroundColor && backgroundColor.trim().length > 0
+                ? backgroundColor
+                : 'white',
+          }}>
+          {renderFlatList()}
+        </View>
+      )}
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 30,
+    paddingVertical: containerHeight * 0.08,
+    height: containerHeight,
   },
   headerText: {
-    fontSize: 26,
+    fontSize: (22 * width * 0.037) / 14,
     fontWeight: '500',
     textAlign: 'center',
-    marginVertical: 1,
+    marginVertical: verticalScale(8),
     color: '#5d1115',
   },
   slide: {
     width: itemWidth,
-    justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fdf4ef',
-    marginHorizontal: 8,
-    borderWidth: 0.2,
-    borderRadius: 2,
-    marginTop: 20,
+    marginHorizontal: horizontalScale(8),
+    borderRadius: 8,
+    marginTop: verticalScale(20),
+    flex: 1,
   },
   imageContainer: {
     width: '100%',
     overflow: 'hidden',
-    marginBottom: 10,
-    alignItems: 'center',
+    height: imageHeight,
+    borderRadius: 8,
   },
   image: {
     width: '100%',
-    resizeMode: 'cover',
-    borderRadius: 5,
     height: '100%',
+    borderRadius: 8,
+    resizeMode: 'cover',
   },
   title: {
-    fontSize: 18,
+    fontSize: (16 * width * 0.037) / 14,
     fontWeight: '600',
-    marginTop: 10,
+    marginTop: verticalScale(5),
     color: '#5d1115',
     textAlign: 'center',
-  },
-  subtitle: {
-    fontSize: 15,
-    color: '#5d1115',
-    textAlign: 'center',
-    marginVertical: 5,
-    fontWeight: '600',
   },
   content: {
-    fontSize: 12,
-    marginVertical: 8,
+    fontSize: (12 * width * 0.037) / 14,
+    marginVertical: slideHeight * 0.02,
     textAlign: 'center',
     color: '#5d1115',
-    paddingHorizontal: 20,
+    paddingHorizontal: itemWidth * 0.1,
     fontWeight: '500',
   },
   buttonContainer: {
-    marginBottom: 10,
-    marginTop: 5,
+    alignSelf: 'center',
+    marginTop: slideHeight * 0.01,
   },
   button: {
     borderRadius: 25,
-    height: 30,
-    width: 90,
+    height: slideHeight * 0.11,
+    width: itemWidth * 0.5,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
+    backgroundColor: '#5d1115',
   },
   buttonText: {
     color: 'white',
-    fontSize: 12,
+    fontSize: (12 * width * 0.037) / 14,
   },
   staticSlide: {
-    justifyContent: 'space-between',
-    paddingVertical: 20,
+    flex: 1,
+  },
+  staticContentContainer: {
+    justifyContent: 'center',
+    height: slideHeight * 0.76,
+    flex: 1,
   },
   staticSlideTitle: {
-    marginTop: 50,
-    marginBottom: 0,
-    flex: 1,
-    justifyContent: 'center',
+    marginTop: verticalScale(20),
     color: '#99772b',
-    fontSize: 20,
-    paddingHorizontal: 10,
+    fontSize: (16 * width * 0.037) / 14,
+    paddingHorizontal: horizontalScale(10),
+    textAlign: 'center',
   },
   staticButtonContainer: {
-    marginBottom: 10,
+    alignItems: 'center',
+    paddingTop: slideHeight * 0.02,
+    height: slideHeight * 0.2,
+  },
+  staticButton: {
+    height: slideHeight * 0.11,
+    width: itemWidth * 0.53,
+    borderRadius: 6,
+    backgroundColor: '#99772b',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   backgroundImage: {
     flex: 1,
     resizeMode: 'cover',
   },
-  staticButton: {
-    width: 100,
-    height: 30,
-    borderRadius: 8,
-    backgroundColor: '#99772b',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   noDataText: {
-    fontSize: 18,
+    fontSize: (16 * width * 0.037) / 14,
     color: '#5d1115',
     textAlign: 'center',
-    marginVertical: 20,
+    marginVertical: verticalScale(20),
+  },
+  shadowStyle: {
+    elevation: 5,
   },
 });
 

@@ -24,7 +24,8 @@ const UserScreen = () => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <ScrollView
-        contentContainerStyle={{alignItems: 'center', paddingVertical: 20}}>
+        contentContainerStyle={{alignItems: 'center', paddingVertical: 20}}
+        showsVerticalScrollIndicator={false}>
         {userDataResponse &&
           userDataResponse?.results?.map((item: User, index: number) => (
             <UserItemCard

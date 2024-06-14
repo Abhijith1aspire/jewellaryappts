@@ -6,24 +6,29 @@ import {
   StyleSheet,
   Dimensions,
   FlatList,
+  ImageBackground,
 } from 'react-native';
 import {AdditionalField} from '../screens/HomeScreen/HomeScreenModal';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import {placeHolderImage} from '../constants/constants';
+import {horizontalScale, moderateScale, verticalScale} from '../utils/Metrics';
 
 type FullSliderProps = {
   headerTitle: string | null;
   backgroundColor: string | null;
   data: AdditionalField[] | undefined;
+  backgroundImage: string | null;
 };
 
-const {width} = Dimensions.get('window');
-const itemWidth = width / 2 - 1;
+const {width, height} = Dimensions.get('window');
+const itemWidth = width / 2 - horizontalScale(10);
+const itemHeight = height * 0.36;
 
 const FullSlider: React.FC<FullSliderProps> = ({
   backgroundColor,
   data,
   headerTitle,
+  backgroundImage,
 }) => {
   const validData = data?.filter(
     item =>
@@ -35,116 +40,124 @@ const FullSlider: React.FC<FullSliderProps> = ({
       item.image,
   );
 
-  const renderItem = ({item}: {item: AdditionalField}) => {
+  const renderItem = ({item}: {item: AdditionalField}) => (
+    <View style={[styles.slide]}>
+      <Icon
+        name="bag"
+        size={moderateScale(20)}
+        color="white"
+        style={styles.icon}
+      />
+      <Image
+        source={{
+          uri: item.image
+            ? `https://media-demo.grtjewels.com/${item.image}`
+            : placeHolderImage,
+        }}
+        style={[styles.image, {height: itemHeight * 0.85}]}
+        onError={error => console.log('Image load error:', error)}
+      />
+    </View>
+  );
+
+  const renderFlatList = () => {
     return (
-      <View style={styles.slide}>
-        <Icon name="bag" size={20} color="white" style={styles.icon} />
-        {item.image ? (
-          <Image
-            source={{uri: `https://media-demo.grtjewels.com/${item.image}`}}
-            style={styles.image}
-            onError={error => console.log('Image load error:', error)}
+      <>
+        {headerTitle && <Text style={styles.headerText}>{headerTitle}</Text>}
+        {validData && validData.length > 0 ? (
+          <FlatList
+            data={validData}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            decelerationRate="fast"
+            snapToOffsets={validData.map((_, index) => itemWidth * index)}
           />
         ) : (
-          <Image
-            source={{uri: placeHolderImage}}
-            style={styles.image}
-            onError={error => console.log('Image load error:', error)}
-          />
+          <Text style={styles.noDataText}>No offers available</Text>
         )}
-        {item.title && (
-          <View style={styles.titleContainer}>
-            <Text style={styles.title}>{item.title}</Text>
-          </View>
-        )}
-      </View>
+      </>
     );
   };
-
   return (
-    <View style={[styles.container, {backgroundColor: backgroundColor}]}>
-      {headerTitle && <Text style={styles.headerText}>{headerTitle}</Text>}
-      {validData && validData.length > 0 ? (
-        <FlatList
-          data={validData}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          decelerationRate="fast"
-          snapToOffsets={data.map((_, index) => itemWidth * index)}
-        />
+    <>
+      {backgroundImage && backgroundImage.trim().length > 0 ? (
+        <ImageBackground
+          source={{uri: `https://media-demo.grtjewels.com/${backgroundImage}`}}
+          style={[styles.container, styles.backgroundImage]}
+          resizeMode="cover">
+          {renderFlatList()}
+        </ImageBackground>
       ) : (
-        <Text style={styles.noDataText}>No offers available</Text>
+        <View
+          style={[
+            styles.container,
+            styles.backgroundView,
+            {
+              backgroundColor:
+                backgroundColor && backgroundColor.trim().length > 0
+                  ? backgroundColor
+                  : 'white',
+            },
+          ]}>
+          {renderFlatList()}
+        </View>
       )}
-    </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 10,
-    paddingVertical: 30,
-    padding: 10,
+    paddingVertical: verticalScale(30),
+    padding: horizontalScale(10),
+  },
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
+  },
+  backgroundView: {
+    flex: 1,
+    backgroundColor: 'white',
   },
   headerText: {
-    fontSize: 26,
+    fontSize: (26 * width * 0.037) / 14,
     fontWeight: '500',
     textAlign: 'center',
-    marginVertical: 20,
+    marginVertical: verticalScale(20),
     color: '#5d1115',
-    paddingHorizontal: 20,
+    paddingHorizontal: horizontalScale(20),
   },
   slide: {
     width: itemWidth,
-    justifyContent: 'center',
+    height: itemHeight,
     alignItems: 'center',
-    marginHorizontal: 8,
-    borderRadius: 6,
+    marginHorizontal: horizontalScale(8),
+    borderRadius: moderateScale(6),
     position: 'relative',
   },
   icon: {
     position: 'absolute',
-    top: 15,
-    right: 15,
+    top: verticalScale(15),
+    right: horizontalScale(15),
     zIndex: 1,
   },
   image: {
+    flex: 1,
     width: '100%',
-    height: 300,
+    height: '100%',
     resizeMode: 'cover',
-    borderRadius: 6,
-  },
-  placeholder: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#ccc',
-  },
-  placeholderText: {
-    color: '#666',
-  },
-  titleContainer: {
-    height: 40,
-    width: 150,
-    backgroundColor: '#5d1115',
-    marginVertical: 10,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 14,
-    fontWeight: '400',
-    color: '#fff',
-    textAlign: 'center',
+    borderRadius: moderateScale(6),
   },
   noDataText: {
-    fontSize: 18,
+    fontSize: moderateScale(18),
     color: '#5d1115',
     textAlign: 'center',
-    marginVertical: 20,
+    marginVertical: verticalScale(20),
   },
 });
 

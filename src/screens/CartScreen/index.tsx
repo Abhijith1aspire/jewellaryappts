@@ -100,7 +100,9 @@ const CartScreen: React.FC = () => {
           Your Cart is empty. Please add some items to your Cart!
         </Text>
       ) : (
-        <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        <ScrollView
+          contentContainerStyle={styles.scrollViewContent}
+          showsVerticalScrollIndicator={false}>
           <View style={styles.itemsContainer}>
             {cartItems.map(item => (
               <CartItem
@@ -163,7 +165,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
-    borderWidth: 0.5,
     borderRadius: 5,
     backgroundColor: '#FDF2F2',
     marginBottom: 10,

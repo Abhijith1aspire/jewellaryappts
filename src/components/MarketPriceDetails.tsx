@@ -1,11 +1,18 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Dimensions,
+} from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import DateTimePicker from './DateTimePicker';
 import {RootStackParamList} from '../props/prop';
+import {verticalScale, moderateScale} from '../utils/Metrics';
 
 type Item = {
   title: string;
@@ -35,6 +42,8 @@ type MapScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   'MapScreen'
 >;
+const {width} = Dimensions.get('window');
+const dropdownButtonWidth = width * 0.5;
 
 const MarketPriceDetails: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<Item>(items[0]);
@@ -54,7 +63,8 @@ const MarketPriceDetails: React.FC = () => {
           setSelectedItem(selectedItem);
         }}
         renderButton={(selectedItem, isOpen) => (
-          <View style={styles.dropdownButtonStyle}>
+          <View
+            style={[styles.dropdownButtonStyle, {width: dropdownButtonWidth}]}>
             {selectedItem && (
               <Icon
                 name={selectedItem.icon}
@@ -73,7 +83,8 @@ const MarketPriceDetails: React.FC = () => {
           </View>
         )}
         renderItem={(item, index, isSelected) => (
-          <View
+          <TouchableOpacity
+            onPress={() => setSelectedItem(item)}
             style={[
               styles.dropdownItemStyle,
               isSelected && styles.dropdownItemSelectedStyle,
@@ -82,17 +93,25 @@ const MarketPriceDetails: React.FC = () => {
             <Text style={styles.dropdownItemTxtStyle}>
               {`${item.title} Rs ${item.price}`}
             </Text>
-          </View>
+          </TouchableOpacity>
         )}
         dropdownStyle={styles.dropdownMenuStyle}
         showsVerticalScrollIndicator={false}
       />
       <View style={styles.iconWrapper}>
         <TouchableOpacity onPress={() => navigation.navigate('MapScreen')}>
-          <Icon name="google-maps" size={30} style={styles.additionalIcon} />
+          <Icon
+            name="google-maps"
+            size={moderateScale(30)}
+            style={styles.additionalIcon}
+          />
         </TouchableOpacity>
         <TouchableOpacity onPress={handleDateTimePicker}>
-          <Icon name="calendar-month" size={30} style={styles.additionalIcon} />
+          <Icon
+            name="calendar-month"
+            size={moderateScale(30)}
+            style={styles.additionalIcon}
+          />
         </TouchableOpacity>
         <DateTimePicker
           openDateTimePicker={openDateTimePicker}
@@ -108,14 +127,13 @@ export default MarketPriceDetails;
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    paddingVertical: 10,
     alignItems: 'center',
     backgroundColor: '#FDF2F2',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    height: verticalScale(60),
   },
   dropdownButtonStyle: {
-    width: '50%',
     height: 40,
     backgroundColor: '#FDF2F2',
     borderRadius: 12,
@@ -124,42 +142,43 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   dropdownButtonTxtStyle: {
-    fontSize: 16,
+    fontSize: width * 0.037,
     fontWeight: '500',
     color: '#5C1A1A',
-    marginLeft: 10,
+    marginLeft: moderateScale(10),
   },
   dropdownButtonArrowStyle: {
-    fontSize: 24,
+    fontSize: width * 0.037,
     color: '#5C1A1A',
   },
   dropdownButtonIconStyle: {
-    fontSize: 24,
+    fontSize: width * 0.037,
     color: '#5C1A1A',
   },
   dropdownMenuStyle: {
     backgroundColor: '#FFFFFF',
     borderRadius: 8,
     marginTop: 4,
+    width: dropdownButtonWidth,
   },
   dropdownItemStyle: {
     width: '100%',
     flexDirection: 'row',
-    paddingHorizontal: 10,
+    paddingHorizontal: moderateScale(10),
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingVertical: 4,
+    paddingVertical: moderateScale(4),
   },
   dropdownItemSelectedStyle: {
     backgroundColor: '#f0f0f0',
   },
   dropdownItemTxtStyle: {
-    fontSize: 16,
+    fontSize: width * 0.037,
     color: '#5C1A1A',
-    marginLeft: 10,
+    marginLeft: moderateScale(10),
   },
   dropdownItemIconStyle: {
-    fontSize: 24,
+    fontSize: width * 0.037,
     color: '#5C1A1A',
   },
   iconWrapper: {
@@ -168,6 +187,6 @@ const styles = StyleSheet.create({
     width: '20%',
   },
   additionalIcon: {
-    marginRight: 10,
+    marginRight: moderateScale(10),
   },
 });

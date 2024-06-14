@@ -1,5 +1,11 @@
-import {StyleSheet, View, Image, TouchableOpacity} from 'react-native';
 import React from 'react';
+import {
+  StyleSheet,
+  View,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 import StarIcon from 'react-native-vector-icons/FontAwesome';
 import AccountIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import LikeIcon from 'react-native-vector-icons/AntDesign';
@@ -8,6 +14,7 @@ import MenuIcon from 'react-native-vector-icons/Feather';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../props/prop';
+import {moderateScale, verticalScale} from '../utils/Metrics';
 
 type CartScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -16,6 +23,8 @@ type CartScreenNavigationProp = StackNavigationProp<
 
 const LogoHeader: React.FC = () => {
   const navigation = useNavigation<CartScreenNavigationProp>();
+  const {width, height} = Dimensions.get('window');
+  const logoWidth = width * 0.25;
 
   return (
     <View style={styles.container}>
@@ -23,13 +32,13 @@ const LogoHeader: React.FC = () => {
         <TouchableOpacity>
           <MenuIcon
             name="menu"
-            size={25}
+            size={moderateScale(25)}
             color="#5d1115"
-            style={[styles.icon, {marginLeft: 0}]}
+            style={styles.icon}
           />
         </TouchableOpacity>
         <Image
-          style={styles.logo}
+          style={[styles.logo, {width: logoWidth}]}
           source={require('../assets/images/grt.png')}
         />
       </View>
@@ -37,18 +46,15 @@ const LogoHeader: React.FC = () => {
         <TouchableOpacity>
           <StarIcon
             name="star-o"
-            size={23}
+            size={moderateScale(23)}
             color="#5d1115"
             style={styles.icon}
           />
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('UserScreen');
-          }}>
+        <TouchableOpacity onPress={() => navigation.navigate('UserScreen')}>
           <AccountIcon
             name="account-outline"
-            size={26}
+            size={moderateScale(26)}
             color="#5d1115"
             style={styles.icon}
           />
@@ -57,7 +63,7 @@ const LogoHeader: React.FC = () => {
           onPress={() => navigation.navigate('FavoritesScreen')}>
           <LikeIcon
             name="hearto"
-            size={22}
+            size={moderateScale(22)}
             color="#5d1115"
             style={styles.icon}
           />
@@ -65,7 +71,7 @@ const LogoHeader: React.FC = () => {
         <TouchableOpacity onPress={() => navigation.navigate('CartScreen')}>
           <ShoppingBagIcon
             name="shopping-bag"
-            size={22}
+            size={moderateScale(22)}
             color="#5d1115"
             style={styles.icon}
           />
@@ -82,23 +88,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    flex: 1,
+    height: verticalScale(70),
   },
   logoContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   logo: {
-    width: 100,
-    height: 60,
+    height: moderateScale(50),
     resizeMode: 'contain',
-    marginLeft: 10,
-    marginTop: 5,
   },
   iconContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   icon: {
-    marginLeft: 15,
+    marginHorizontal: moderateScale(10),
   },
 });

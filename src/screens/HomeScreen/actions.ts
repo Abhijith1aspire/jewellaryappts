@@ -1,70 +1,75 @@
-import { FETCH_BANNER_DETAILS } from "./actionTypes";
-import { Dispatch } from "redux";
-import { ThunkAction } from "redux-thunk";
-import { RootState } from '../../store/rootreducers/index'; 
-import axios from "axios";
+import {
+  FETCH_BANNER_DETAILS,
+  FETCH_BANNER_DETAILS_FAILURE,
+  FETCH_BANNER_DETAILS_REQUEST,
+} from './actionTypes';
+import { Dispatch } from 'redux';
+import { ThunkAction } from 'redux-thunk';
+import { RootState } from '../../store/rootreducers/index';
+import axios from 'axios';
 
 type FetchDataType = {
-  type: string; 
-  payload: any;
-}
-
-export const fetchData = (): ThunkAction<void, RootState, unknown, FetchDataType> => (dispatch: Dispatch<FetchDataType>) => {
-  getBannerDetails()
-    .then(data => {
-      dispatch({ type: FETCH_BANNER_DETAILS, payload: data });
-    })
-    .catch(error => {
-      console.error(error);
-      dispatch({ type: FETCH_BANNER_DETAILS, payload: {error:"Something went wrong"} });
-    });
+  type: string;
+  payload?: any;
 };
 
-const getBannerDetails = () => {
+export const fetchData = (): ThunkAction<void, RootState, unknown, FetchDataType> => async (dispatch: Dispatch<FetchDataType>) => {
+  dispatch({ type: FETCH_BANNER_DETAILS_REQUEST });
+
+  try {
+    const data = await getBannerDetails();
+    dispatch({ type: FETCH_BANNER_DETAILS, payload: data });
+  } catch (error) {
+    console.error(error);
+    dispatch({ type: FETCH_BANNER_DETAILS_FAILURE, payload: { error: 'Something went wrong' } });
+  }
+};
+
+const getBannerDetails = async () => {
   const data = JSON.stringify({
     query: `query {
-  getTemplateList(identifier: "home_page") {
-    identifier
-    items {
-      title
-      type
-      sortOrder
-      tabGroup
-      tabTitle
-      tabSortOrder
-      cssClass
-      link
-      linkText
-      backgroundImage
-      backgroundColor
-      heroBanner
-      additionalFields {
-        image
-        title
-        subtitle
-        link
-        linkText
-        content
-      }
-      tabItems {
-        tabTitle
-        backgroundImage
-        backgroundColor
-        heroBanner
-        tabSortOrder
-        additionalFields {
-          image
+      getTemplateList(identifier: "home_page") {
+        identifier
+        items {
           title
-          subtitle
+          type
+          sortOrder
+          tabGroup
+          tabTitle
+          tabSortOrder
+          cssClass
           link
           linkText
-          content
+          backgroundImage
+          backgroundColor
+          heroBanner
+          additionalFields {
+            image
+            title
+            subtitle
+            link
+            linkText
+            content
+          }
+          tabItems {
+            tabTitle
+            backgroundImage
+            backgroundColor
+            heroBanner
+            tabSortOrder
+            additionalFields {
+              image
+              title
+              subtitle
+              link
+              linkText
+              content
+            }
+          }
         }
       }
-    }
-  }
-}`,
-    variables: {}
+    }`,
+    variables: {},
   });
 
   const config = {
@@ -74,15 +79,14 @@ const getBannerDetails = () => {
     headers: {
       'Content-Type': 'application/json',
     },
-    data : data
+    data: data,
   };
 
-  return axios.request(config)
-    .then(response => {
-      return response.data;
-    })
-    .catch(error => {
-      console.error(error);
-      throw error; 
-    });
+  try {
+    const response = await axios.request(config);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };

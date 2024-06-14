@@ -7,138 +7,185 @@ import {
   Dimensions,
   FlatList,
   ScrollView,
+  ImageBackground,
 } from 'react-native';
 import {AdditionalField, TabItem} from '../screens/HomeScreen/HomeScreenModal';
 import BannerButtons from './BannerButtons';
 import {placeHolderImage} from '../constants/constants';
+import {verticalScale, horizontalScale, moderateScale} from '../utils/Metrics';
 
 type OnlineOffersTabSliderProps = {
   headerTitle: string | null;
   tabItems?: TabItem[] | undefined;
+  backgroundImage?: string | undefined;
+  backgroundColor?: string | undefined;
 };
 
 const {width, height} = Dimensions.get('window');
-const itemWidth = width / 2 - 66;
+const itemWidth = width / 2 - horizontalScale(33);
 
 const CuratedClassicsTabSlider: React.FC<OnlineOffersTabSliderProps> = ({
   headerTitle,
   tabItems,
+  backgroundImage,
+  backgroundColor,
 }) => {
-  const [selectedItem, setSelectedItem] = useState<string | null>(null);
+  const tabData = tabItems?.map(item => item.tabTitle) || [];
+  const [selectedItem, setSelectedItem] = useState<string | null>(tabData[0]);
 
   const renderItem = ({item}: {item: AdditionalField}) => {
-    const imageHeight = height * 0.16;
+    const imageHeight = height * 0.24;
 
     return (
       <View style={styles.slide}>
-        {item.image ? (
-          <Image
-            source={{uri: `https://media-demo.grtjewels.com/${item.image}`}}
-            style={[styles.image, {height: imageHeight}]}
-          />
-        ) : (
-          <Image
-            source={{
-              uri: placeHolderImage,
-            }}
-            style={[styles.image, {height: imageHeight}]}
-            resizeMode="contain"
-          />
-        )}
+        <View style={{width: '100%', height: imageHeight}}>
+          {item.image ? (
+            <Image
+              source={{uri: `https://media-demo.grtjewels.com/${item.image}`}}
+              style={[styles.image, {height: imageHeight}]}
+            />
+          ) : (
+            <Image
+              source={{uri: placeHolderImage}}
+              style={[styles.image, {height: imageHeight}]}
+              resizeMode="contain"
+            />
+          )}
+        </View>
         {item.title && <Text style={styles.title}>{item.title}</Text>}
       </View>
     );
   };
 
+  const renderFlatList = () => {
+    return (
+      <>
+        {headerTitle && <Text style={styles.headerText}>{headerTitle}</Text>}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContainer}
+          style={styles.scrollView}>
+          <BannerButtons
+            onSelectItem={(selectedItem: string | null) => {
+              setSelectedItem(selectedItem);
+            }}
+            buttonData={tabData}
+          />
+        </ScrollView>
+        <View style={{flex: 1, alignItems: 'center'}}>
+          <FlatList
+            data={
+              selectedItem
+                ? (tabItems &&
+                    tabItems.find(item => item.tabTitle === selectedItem)
+                      ?.additionalFields) ??
+                  []
+                : []
+            }
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            snapToInterval={itemWidth * 2 + 20}
+            decelerationRate="fast"
+            ListEmptyComponent={() => (
+              <View style={styles.emptyContainer}>
+                <Text style={styles.emptyText}>No items to display</Text>
+              </View>
+            )}
+          />
+        </View>
+      </>
+    );
+  };
   return (
-    <View style={styles.container}>
-      {headerTitle && <Text style={styles.headerText}>{headerTitle}</Text>}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{marginBottom: 20, paddingHorizontal: 8}}>
-        <BannerButtons
-          onSelectItem={(selectedItem: string | null) => {
-            console.log('Selected item:', selectedItem);
-            setSelectedItem(selectedItem);
-          }}
-        />
-      </ScrollView>
-      <FlatList
-        data={
-          selectedItem
-            ? (tabItems &&
-                tabItems.find(item => item.tabTitle === selectedItem)
-                  ?.additionalFields) ??
-              []
-            : []
-        }
-        renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        snapToInterval={itemWidth * 2 + 20}
-        decelerationRate="fast"
-        ListEmptyComponent={() => (
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>No items to display</Text>
-          </View>
-        )}
-      />
-    </View>
+    <>
+      {backgroundImage && backgroundImage.trim().length > 0 ? (
+        <ImageBackground
+          source={{uri: `https://media-demo.grtjewels.com/${backgroundImage}`}}
+          style={[styles.container, styles.backgroundImage]}
+          resizeMode="cover">
+          {renderFlatList()}
+        </ImageBackground>
+      ) : (
+        <View
+          style={[
+            styles.container,
+            styles.backgroundView,
+            {
+              backgroundColor:
+                backgroundColor && backgroundColor.trim().length > 0
+                  ? backgroundColor
+                  : 'white',
+            },
+          ]}>
+          {renderFlatList()}
+        </View>
+      )}
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 30,
-    paddingHorizontal: 12,
-    height: height * 0.41,
+    paddingVertical: verticalScale(30),
+    paddingHorizontal: horizontalScale(12),
+  },
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
+  },
+  backgroundView: {
+    flex: 1,
+    backgroundColor: 'white',
   },
   headerText: {
-    fontSize: 26,
+    fontSize: moderateScale(22),
     fontWeight: '500',
     textAlign: 'center',
-    marginTop: 15,
-    marginBottom: 20,
+    marginTop: verticalScale(15),
+    marginBottom: verticalScale(20),
     color: '#5d1115',
-    paddingHorizontal: 40,
   },
   slide: {
     width: itemWidth,
-    justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: 6,
-    borderRadius: 5,
+    marginHorizontal: horizontalScale(6),
+    borderRadius: horizontalScale(5),
+    marginTop: verticalScale(20),
   },
   image: {
     width: '100%',
     overflow: 'hidden',
-    marginBottom: 10,
-    borderRadius: 5,
+    marginBottom: verticalScale(10),
+    borderRadius: horizontalScale(5),
   },
   title: {
-    fontSize: 14,
+    fontSize: verticalScale(14),
     fontWeight: '600',
-    marginTop: 10,
+    marginTop: verticalScale(10),
     color: '#5d1115',
   },
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: width / 2 - 80,
   },
   emptyText: {
     textAlign: 'center',
-    fontSize: 14,
+    fontSize: verticalScale(14),
+    color: '#5d1115',
   },
-  noImageContainer: {
+  scrollContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ccc',
+  },
+  scrollView: {
+    width: width * 0.9,
+    marginBottom: verticalScale(20),
   },
 });
 

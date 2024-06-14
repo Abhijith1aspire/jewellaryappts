@@ -171,7 +171,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingVertical: 10,
     borderRadius: 5,
-    borderWidth: 0.2,
   },
   iconContainer: {
     height: 24,
@@ -181,7 +180,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: 2,
     marginTop: 15,
-    borderWidth: 0.1,
   },
   image: {
     width: '70%',

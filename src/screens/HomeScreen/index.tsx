@@ -1,4 +1,12 @@
-import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Dimensions,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import MarketPriceDetails from '../../components/MarketPriceDetails';
 import LogoHeader from '../../components/LogoHeader';
@@ -31,6 +39,7 @@ const HomeScreen: React.FC = () => {
   const bannerDataFromRedux = useSelector(
     (state: any) => state.bannerData?.bannerData,
   );
+  const isLoading = useSelector((state: any) => state.bannerData?.isLoading);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -44,6 +53,149 @@ const HomeScreen: React.FC = () => {
       setBannerDataResponse(bannerDataFromRedux);
     }
   }, [bannerDataFromRedux]);
+
+  const renderComponent = (item, index) => {
+    switch (item.type) {
+      case 'carousel':
+        return item.additionalFields ? (
+          <CarouselSlider
+            key={index}
+            backgroundColor={item.backgroundColor}
+            data={item.additionalFields}
+            backgroundImage={item.backgroundImage}
+          />
+        ) : null;
+      case 'half-slider-button':
+        if (item.title === 'Checkout our online offers') {
+          return item.additionalFields ? (
+            <OnlineOffersHalfSliderButton
+              key={index}
+              backgroundImage={item.backgroundImage}
+              data={item.additionalFields}
+              headerTitle={item.title}
+              backgroundColor={item.backgroundColor}
+            />
+          ) : null;
+        }
+        if (item.title === 'About GRT') {
+          return item.additionalFields ? (
+            <AboutGRTHaldSliderButton
+              key={index}
+              data={item.additionalFields}
+              headerTitle={item.title}
+              backgroundColor={''}
+              backgroundImage={item.backgroundImage}
+            />
+          ) : null;
+        }
+
+        break;
+      case 'slider':
+        return item.additionalFields ? (
+          <LatestClassicsSlider
+            key={index}
+            backgroundColor={item.backgroundColor}
+            data={item.additionalFields}
+            headerTitle={item.title}
+            backgroundImage={item.backgroundImage}
+          />
+        ) : null;
+      case 'tab':
+        return item.tabItems ? (
+          <CuratedClassicsTabSlider
+            key={index}
+            headerTitle={item.title}
+            tabItems={item.tabItems}
+          />
+        ) : null;
+      case 'static-banners-button':
+        if (item.title === 'Our Brands') {
+          return item.additionalFields ? (
+            <OurBrandsStaticBannersButton
+              key={index}
+              backgroundColor={item.backgroundColor}
+              data={item.additionalFields}
+              headerTitle={item.title}
+              backgroundImage={item.backgroundImage}
+            />
+          ) : null;
+        }
+        if (
+          item.title === 'Jewellery Customisation' ||
+          item.title === 'Save big! With our Jewellery Savings Schemes'
+        ) {
+          return item.additionalFields ? (
+            <JewellaryCustomizationStaticbanner
+              key={index}
+              backgroundColor={item.backgroundColor}
+              data={item.additionalFields}
+              headerTitle={item.title}
+              cssClass={item.cssClass}
+              backgroundImage={item.backgroundImage}
+            />
+          ) : null;
+        }
+        break;
+      case 'half-static-banners-button':
+        if (item.title === 'Gifting your loved ones just got easier') {
+          return item.additionalFields ? (
+            <GiftsHalfStaticButton
+              key={index}
+              data={item.additionalFields}
+              headerTitle={item.title}
+              backgroundColor={item.backgroundColor}
+              backgroundImage={item.backgroundImage}
+            />
+          ) : null;
+        }
+        if (item.title === 'Virtual Shopping') {
+          return item.additionalFields ? (
+            <VirtualShoppingHalfStaticBannerButton
+              key={index}
+              data={item.additionalFields}
+              headerTitle={item.title}
+              backgroundColor={item.backgroundColor}
+              backgroundImage={item.backgroundImage}
+            />
+          ) : null;
+        }
+        break;
+      case 'static-banner-slider-button':
+        return item.additionalFields ? (
+          <StaticBannerSliderButton
+            key={index}
+            data={item.additionalFields}
+            headerTitle={item.title}
+            backgroundColor={item.backgroundColor}
+            backgroundImage={item.backgroundImage}
+          />
+        ) : null;
+      case 'full-slider':
+        return item.additionalFields ? (
+          <FullSlider
+            key={index}
+            data={item.additionalFields}
+            headerTitle={item.title}
+            backgroundColor={item.backgroundColor}
+            backgroundImage={item.backgroundImage}
+          />
+        ) : null;
+      case 'static-banners':
+        if (item.title === 'Come visit us at any of our store') {
+          return item.additionalFields ? (
+            <LocationStaticBanners
+              key={index}
+              backgroundColor={item.backgroundColor}
+              data={item.additionalFields}
+              headerTitle={item.title}
+            />
+          ) : null;
+        }
+        break;
+      default:
+        return null;
+    }
+  };
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -59,163 +211,14 @@ const HomeScreen: React.FC = () => {
           </View>
         </View>
         <Text>{bannerDataResponse?.error}</Text>
-        {bannerDataResponse?.data?.getTemplateList.items?.map((item, index) => {
-          if (item?.type === 'carousel') {
-            return (
-              item?.additionalFields && (
-                <CarouselSlider
-                  key={index}
-                  backgroundColor={item?.backgroundColor}
-                  data={item?.additionalFields}
-                />
-              )
-            );
-          } else if (
-            item?.type === 'half-slider-button' &&
-            item?.title === 'Checkout our online offers'
-          ) {
-            return (
-              item?.additionalFields && (
-                <OnlineOffersHalfSliderButton
-                  key={index}
-                  backgroundImage={item?.backgroundImage}
-                  data={item?.additionalFields}
-                  headerTitle={item?.title}
-                />
-              )
-            );
-          } else if (item?.type === 'slider') {
-            return (
-              item?.additionalFields && (
-                <LatestClassicsSlider
-                  key={index}
-                  backgroundColor={item?.backgroundColor}
-                  data={item?.additionalFields}
-                  headerTitle={item?.title}
-                />
-              )
-            );
-          } else if (item?.type === 'tab') {
-            return (
-              item?.tabItems && (
-                <CuratedClassicsTabSlider
-                  key={index}
-                  headerTitle={item?.title}
-                  tabItems={item?.tabItems}
-                />
-              )
-            );
-          } else if (
-            item?.type === 'static-banners-button' &&
-            item?.title === 'Our Brands'
-          ) {
-            return (
-              item?.additionalFields && (
-                <OurBrandsStaticBannersButton
-                  key={index}
-                  backgroundColor={item?.backgroundColor}
-                  data={item?.additionalFields}
-                  headerTitle={item?.title}
-                />
-              )
-            );
-          } else if (
-            item?.type === 'half-static-banners-button' &&
-            item?.title === 'Gifting your loved ones just got easier'
-          ) {
-            return (
-              item?.additionalFields && (
-                <GiftsHalfStaticButton
-                  key={index}
-                  data={item?.additionalFields}
-                  headerTitle={item?.title}
-                  backgroundColor={null}
-                />
-              )
-            );
-          } else if (
-            item?.type === 'static-banners-button' &&
-            (item?.title === 'Jewellery Customisation' ||
-              item?.title === 'Save big! With our Jewellery Savings Schemes')
-          ) {
-            return (
-              item?.additionalFields && (
-                <JewellaryCustomizationStaticbanner
-                  key={index}
-                  backgroundColor={item?.backgroundColor}
-                  data={item?.additionalFields}
-                  headerTitle={item?.title}
-                  cssClass={item?.cssClass}
-                />
-              )
-            );
-          } else if (item?.type === 'static-banner-slider-button') {
-            return (
-              item?.additionalFields && (
-                <StaticBannerSliderButton
-                  key={index}
-                  data={item?.additionalFields}
-                  headerTitle={item?.title}
-                  backgroundColor={item?.backgroundColor}
-                />
-              )
-            );
-          } else if (item?.type === 'full-slider') {
-            return (
-              item?.additionalFields && (
-                <FullSlider
-                  key={index}
-                  data={item?.additionalFields}
-                  headerTitle={item?.title}
-                  backgroundColor={item?.backgroundColor}
-                />
-              )
-            );
-          } else if (
-            item?.type === 'half-static-banners-button' &&
-            item?.title === 'Virtual Shopping'
-          ) {
-            return (
-              item?.additionalFields && (
-                <VirtualShoppingHalfStaticBannerButton
-                  key={index}
-                  data={item?.additionalFields}
-                  headerTitle={item?.title}
-                  backgroundColor={item?.backgroundColor}
-                />
-              )
-            );
-          } else if (
-            item?.type === 'static-banners' &&
-            item?.title === 'Come visit us at any of our store'
-          ) {
-            return (
-              item?.additionalFields && (
-                <LocationStaticBanners
-                  key={index}
-                  backgroundColor={item?.backgroundColor}
-                  data={item?.additionalFields}
-                  headerTitle={item?.title}
-                />
-              )
-            );
-          } else if (
-            item?.type === 'half-slider-button' &&
-            item?.title === 'About GRT'
-          ) {
-            return (
-              item?.additionalFields && (
-                <AboutGRTHaldSliderButton
-                  key={index}
-                  data={item?.additionalFields}
-                  headerTitle={item?.title}
-                  backgroundColor={item?.backgroundColor}
-                />
-              )
-            );
-          }
-          return null;
-        })}
+        {isLoading ? (
+          <View
+            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <ActivityIndicator size="large" color="black" />
+          </View>
+        ) : (
+          bannerDataResponse?.data?.getTemplateList.items?.map(renderComponent)
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -228,7 +231,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     width: '100%',
     zIndex: 10,
-    paddingHorizontal: 14,
   },
   scrollContainer: {
     alignItems: 'center',

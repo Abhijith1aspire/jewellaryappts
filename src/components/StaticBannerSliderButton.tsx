@@ -6,24 +6,29 @@ import {
   StyleSheet,
   Dimensions,
   FlatList,
+  ImageBackground,
 } from 'react-native';
 import {AdditionalField} from '../screens/HomeScreen/HomeScreenModal';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {placeHolderImage} from '../constants/constants';
+import {horizontalScale, moderateScale, verticalScale} from '../utils/Metrics';
 
 type StaticBannerSliderButtonProps = {
   headerTitle: string | null;
   backgroundColor: string | null;
   data: AdditionalField[];
+  backgroundImage: string | null;
 };
 
-const {width} = Dimensions.get('window');
-const itemWidth = width / 2 - 10;
+const {width, height} = Dimensions.get('window');
+const itemWidth = width / 2 - horizontalScale(10);
+const itemHeight = height * 0.42;
 
 const StaticBannerSliderButton: React.FC<StaticBannerSliderButtonProps> = ({
   backgroundColor,
   data,
   headerTitle,
+  backgroundImage,
 }) => {
   const validData = data?.filter(
     item =>
@@ -35,99 +40,133 @@ const StaticBannerSliderButton: React.FC<StaticBannerSliderButtonProps> = ({
       item.image,
   );
 
-  const renderItem = ({item}: {item: AdditionalField}) => {
-    return (
-      <View style={styles.slide}>
-        {item.image ? (
-          <Image
-            source={{uri: `https://media-demo.grtjewels.com/${item.image}`}}
-            style={styles.image}
-            onError={error => console.log('Image load error:', error)}
-          />
-        ) : (
-          <Image
-            source={{uri: placeHolderImage}}
-            style={styles.image}
-            onError={error => console.log('Image load error:', error)}
-          />
-        )}
-        {item.title && (
-          <TouchableOpacity style={styles.titleButton}>
-            <Text style={styles.title}>{item.title}</Text>
-          </TouchableOpacity>
-        )}
-      </View>
-    );
-  };
-
-  return (
-    <View style={[styles.container, {backgroundColor: backgroundColor}]}>
-      {headerTitle && <Text style={styles.headerText}>{headerTitle}</Text>}
-      {validData && validData.length > 0 ? (
-        <FlatList
-          data={data}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          snapToInterval={itemWidth * 2 + 20}
-          decelerationRate="fast"
+  const renderItem = ({item}: {item: AdditionalField}) => (
+    <View style={styles.slide}>
+      {item.image ? (
+        <Image
+          source={{uri: `https://media-demo.grtjewels.com/${item.image}`}}
+          style={styles.image}
         />
       ) : (
-        <Text style={styles.noDataText}>No offers available</Text>
+        <Image source={{uri: placeHolderImage}} style={styles.image} />
+      )}
+      {item.title && (
+        <TouchableOpacity style={styles.titleButton}>
+          <Text style={styles.title}>{item.title}</Text>
+        </TouchableOpacity>
       )}
     </View>
+  );
+
+  const renderFlatList = () => {
+    return (
+      <>
+        {headerTitle && <Text style={styles.headerText}>{headerTitle}</Text>}
+        {validData && validData.length > 0 ? (
+          <FlatList
+            data={validData}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            snapToInterval={itemWidth + horizontalScale(20)}
+            decelerationRate="fast"
+            contentContainerStyle={styles.bannerContainer}
+          />
+        ) : (
+          <Text style={styles.noDataText}>No offers available</Text>
+        )}
+      </>
+    );
+  };
+  return (
+    <>
+      {backgroundImage && backgroundImage.trim().length > 0 ? (
+        <ImageBackground
+          source={{uri: `https://media-demo.grtjewels.com/${backgroundImage}`}}
+          style={[styles.container, styles.backgroundImage]}
+          resizeMode="cover">
+          {renderFlatList()}
+        </ImageBackground>
+      ) : (
+        <View
+          style={[
+            styles.container,
+            styles.backgroundView,
+            {
+              backgroundColor:
+                backgroundColor && backgroundColor.trim().length > 0
+                  ? backgroundColor
+                  : 'white',
+            },
+          ]}>
+          {renderFlatList()}
+        </View>
+      )}
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 10,
-    padding: 10,
-    paddingVertical: 30,
+    padding: horizontalScale(10),
+    paddingVertical: verticalScale(30),
+  },
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
+  },
+  backgroundView: {
+    flex: 1,
+    backgroundColor: 'white',
   },
   headerText: {
-    fontSize: 25,
+    fontSize: (25 * width * 0.037) / 14,
     fontWeight: '500',
     textAlign: 'center',
-    marginVertical: 20,
+    marginVertical: verticalScale(20),
     color: '#5d1115',
   },
+  bannerContainer: {
+    paddingHorizontal: horizontalScale(10),
+    marginTop: verticalScale(10),
+  },
   slide: {
+    height: itemHeight,
     width: itemWidth,
-    justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: 8,
-    borderRadius: 5,
+    marginHorizontal: horizontalScale(8),
+    borderRadius: moderateScale(5),
   },
   image: {
     width: '100%',
-    height: 340,
+    height: '85%',
     resizeMode: 'cover',
-    borderRadius: 5,
+    borderRadius: moderateScale(5),
   },
   titleButton: {
-    height: 40,
-    width: 150,
+    height: itemHeight * 0.12,
+    width: itemWidth * 0.75,
     backgroundColor: '#5d1115',
-    marginVertical: 10,
-    borderRadius: 6,
+    marginVertical: verticalScale(10),
+    borderRadius: moderateScale(6),
     justifyContent: 'center',
     alignItems: 'center',
   },
   title: {
-    fontSize: 14,
+    fontSize: (24 * itemWidth * 0.037) / 14,
     fontWeight: '400',
     color: '#fff',
     textAlign: 'center',
   },
   noDataText: {
-    fontSize: 18,
+    fontSize: moderateScale(18),
     color: '#5d1115',
     textAlign: 'center',
-    marginVertical: 20,
+    marginVertical: verticalScale(20),
   },
 });
 

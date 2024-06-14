@@ -7,24 +7,28 @@ import {
   Dimensions,
   TouchableOpacity,
   FlatList,
+  ImageBackground,
 } from 'react-native';
 import {AdditionalField} from '../screens/HomeScreen/HomeScreenModal';
 import {placeHolderImage} from '../constants/constants';
+import {horizontalScale, moderateScale, verticalScale} from '../utils/Metrics';
 
 type StaticBannerProps = {
   headerTitle: string | null;
-  backgroundColor: string | null;
+  backgroundColor?: string | null;
   data: AdditionalField[];
+  backgroundImage?: string | null;
 };
 
 const {width, height} = Dimensions.get('window');
-const itemWidth = width - 40;
-const itemHeight = height * 0.3;
+const itemWidth = width - horizontalScale(40);
+const itemHeight = height * 0.34;
 
 const OurBrandsStaticBannersButton: React.FC<StaticBannerProps> = ({
   backgroundColor,
   data,
   headerTitle,
+  backgroundImage,
 }) => {
   const validData = data?.filter(
     item =>
@@ -68,112 +72,149 @@ const OurBrandsStaticBannersButton: React.FC<StaticBannerProps> = ({
     </View>
   );
 
+  const renderFlatList = () => {
+    return (
+      <>
+        <Text style={styles.headerText}>{headerTitle}</Text>
+        {validData && validData.length > 0 ? (
+          <FlatList
+            data={validData}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            snapToInterval={itemWidth + horizontalScale(20)}
+            decelerationRate="fast"
+            contentContainerStyle={styles.bannerContainer}
+            initialScrollIndex={0}
+            getItemLayout={(data, index) => ({
+              length: itemWidth + horizontalScale(20),
+              offset: (itemWidth + horizontalScale(20)) * index,
+              index,
+            })}
+          />
+        ) : (
+          <Text style={styles.noDataText}>No offers available</Text>
+        )}
+      </>
+    );
+  };
+
   return (
-    <View style={[styles.container, {backgroundColor: backgroundColor}]}>
-      <Text style={styles.headerText}>{headerTitle}</Text>
-      {validData && validData.length > 0 ? (
-        <FlatList
-          data={validData}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          snapToInterval={itemWidth + 20}
-          decelerationRate="fast"
-          contentContainerStyle={styles.bannerContainer}
-          initialScrollIndex={0}
-          getItemLayout={(data, index) => ({
-            length: itemWidth + 20,
-            offset: (itemWidth + 20) * index,
-            index,
-          })}
-        />
+    <>
+      {backgroundImage && backgroundImage.trim().length > 0 ? (
+        <ImageBackground
+          source={{uri: `https://media-demo.grtjewels.com/${backgroundImage}`}}
+          style={[styles.container, styles.backgroundImage]}
+          resizeMode="cover">
+          {renderFlatList()}
+        </ImageBackground>
       ) : (
-        <Text style={styles.noDataText}>No offers available</Text>
+        <View
+          style={[
+            styles.container,
+            styles.backgroundView,
+            {
+              backgroundColor:
+                backgroundColor && backgroundColor.trim().length > 0
+                  ? backgroundColor
+                  : 'white',
+            },
+          ]}>
+          {renderFlatList()}
+        </View>
       )}
-    </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 30,
+    paddingVertical: verticalScale(30),
+  },
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
+  },
+  backgroundView: {
+    flex: 1,
+    backgroundColor: 'white',
   },
   headerText: {
-    fontSize: 26,
+    fontSize: moderateScale(26),
     fontWeight: '400',
     textAlign: 'center',
-    marginVertical: 10,
+    marginVertical: verticalScale(10),
     color: '#5d1115',
   },
   bannerContainer: {
-    paddingHorizontal: 10,
-    marginTop: 10,
+    paddingHorizontal: horizontalScale(10),
+    marginTop: verticalScale(10),
   },
   slide: {
     width: itemWidth,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 0,
-    borderWidth: 0.2,
-    marginHorizontal: 10,
+    borderRadius: moderateScale(10),
+    marginHorizontal: horizontalScale(10),
   },
   imageContainer: {
     position: 'relative',
     width: '100%',
-    height: itemHeight,
-    borderRadius: 10,
+    height: '100%',
+    borderRadius: moderateScale(10),
     overflow: 'hidden',
   },
   image: {
     width: '100%',
+    height: '100%',
     resizeMode: 'cover',
   },
   contents: {
     position: 'absolute',
-    top: 10,
-    bottom: 10,
-    left: 200,
+    top: verticalScale(10),
+    bottom: verticalScale(10),
+    left: horizontalScale(200),
     right: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 20,
+    paddingVertical: verticalScale(20),
   },
   title: {
-    fontSize: 25,
+    fontSize: moderateScale(25),
     fontWeight: '200',
     color: 'white',
-    marginBottom: 20,
+    marginBottom: verticalScale(20),
   },
   content: {
-    fontSize: 14,
+    fontSize: itemWidth * 0.037,
     color: 'white',
     textAlign: 'center',
-    marginHorizontal: 34,
+    marginHorizontal: horizontalScale(18),
     fontWeight: '300',
   },
   button: {
     backgroundColor: 'white',
-    paddingHorizontal: 20,
-    paddingVertical: 6,
-    borderRadius: 6,
-    marginTop: 25,
+    borderRadius: moderateScale(4),
+    marginTop: verticalScale(30),
+    width: horizontalScale(100),
+    height: verticalScale(28),
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   buttonText: {
-    fontSize: 14,
+    fontSize: itemWidth * 0.037,
     fontWeight: 'bold',
     color: 'black',
     textAlign: 'center',
   },
   noDataText: {
-    fontSize: 18,
+    fontSize: moderateScale(18),
     color: '#5d1115',
     textAlign: 'center',
-    marginVertical: 20,
+    marginVertical: verticalScale(20),
   },
 });
 

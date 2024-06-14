@@ -6,24 +6,34 @@ import {
   StyleSheet,
   Dimensions,
   FlatList,
+  ImageBackground,
 } from 'react-native';
 import {AdditionalField} from '../screens/HomeScreen/HomeScreenModal';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {placeHolderImage} from '../constants/constants';
+import {
+  fontScale,
+  horizontalScale,
+  moderateScale,
+  verticalScale,
+} from '../utils/Metrics';
 
 type AboutGRTHaldSliderButtonProps = {
   headerTitle: string | null;
-  backgroundColor: string | null;
+  backgroundColor?: string | null;
   data: AdditionalField[] | undefined;
+  backgroundImage?: string | null;
 };
 
-const {width} = Dimensions.get('window');
-const itemWidth = width - 60;
+const {width, height} = Dimensions.get('window');
+const itemWidth = width - horizontalScale(60);
+const itemHeight = height * 0.4;
 
 const AboutGRTHaldSliderButton: React.FC<AboutGRTHaldSliderButtonProps> = ({
   backgroundColor,
   data,
   headerTitle,
+  backgroundImage,
 }) => {
   const validData = data?.filter(
     item =>
@@ -59,94 +69,142 @@ const AboutGRTHaldSliderButton: React.FC<AboutGRTHaldSliderButtonProps> = ({
     </View>
   );
 
+  const renderFlatList = () => {
+    return (
+      <>
+        {headerTitle && <Text style={styles.headerText}>{headerTitle}</Text>}
+        {validData && validData.length > 0 ? (
+          <FlatList
+            data={data}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            snapToInterval={itemWidth + horizontalScale(20)}
+            decelerationRate="fast"
+            contentContainerStyle={{
+              paddingHorizontal: horizontalScale(10),
+              paddingBottom: verticalScale(20),
+            }}
+          />
+        ) : (
+          <Text style={styles.noDataText}>No Data available</Text>
+        )}
+      </>
+    );
+  };
+
   return (
-    <View style={styles.container}>
-      {headerTitle && <Text style={styles.headerText}>{headerTitle}</Text>}
-      {validData && validData.length > 0 ? (
-        <FlatList
-          data={data}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          snapToInterval={itemWidth * 2 + 20}
-          decelerationRate="fast"
-          contentContainerStyle={{paddingHorizontal: 10}}
-        />
+    <>
+      {backgroundImage && backgroundImage.trim().length > 0 ? (
+        <ImageBackground
+          source={{uri: `https://media-demo.grtjewels.com/${backgroundImage}`}}
+          style={[styles.container, styles.backgroundImage]}
+          resizeMode="cover">
+          {renderFlatList()}
+        </ImageBackground>
       ) : (
-        <Text style={styles.noDataText}>No Data available</Text>
+        <View
+          style={[
+            styles.container,
+            styles.backgroundView,
+            {
+              backgroundColor:
+                backgroundColor && backgroundColor.trim().length > 0
+                  ? backgroundColor
+                  : 'white',
+            },
+          ]}>
+          {renderFlatList()}
+        </View>
       )}
-    </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FDF2F2',
-    paddingVertical: 30,
+    paddingVertical: verticalScale(30),
+  },
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
+  },
+  backgroundView: {
+    flex: 1,
+    backgroundColor: 'white',
   },
   headerText: {
-    fontSize: 22,
+    fontSize: fontScale(24),
     fontWeight: '400',
     textAlign: 'center',
-    marginVertical: 10,
+    marginVertical: verticalScale(10),
     color: '#5d1115',
   },
   slide: {
     width: itemWidth,
+    height: itemHeight,
     backgroundColor: '#FDF2F2',
-    marginHorizontal: 8,
-    borderRadius: 5,
-    borderWidth: 0.2,
+    marginHorizontal: horizontalScale(8),
+    borderRadius: moderateScale(5),
+    elevation: 4,
+    alignItems: 'center',
+    paddingBottom: verticalScale(10),
   },
   imageContainer: {
     width: '100%',
-    height: 150,
+    height: '48%',
     overflow: 'hidden',
   },
   image: {
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
-    borderRadius: 10,
+    borderRadius: moderateScale(10),
   },
   title: {
-    fontSize: 20,
+    fontSize: fontScale(20, itemWidth),
     fontWeight: '500',
     color: '#5d1115',
   },
   content: {
-    fontSize: 13,
-    marginVertical: 5,
+    fontSize: fontScale(14, itemWidth),
+    marginVertical: verticalScale(5),
     color: '#5d1115',
   },
   contentContainer: {
-    paddingLeft: 12,
-    paddingBottom: 10,
+    paddingLeft: horizontalScale(12),
+    paddingBottom: verticalScale(10),
+    height: '52%',
+    width: '100%',
+    justifyContent: 'space-between',
   },
   noDataText: {
-    fontSize: 18,
+    fontSize: moderateScale(18),
     color: '#5d1115',
     textAlign: 'center',
-    marginVertical: 20,
+    marginVertical: verticalScale(20),
   },
   textContainer: {
     width: '90%',
     alignSelf: 'flex-start',
-    marginTop: 12,
+    marginTop: verticalScale(12),
   },
   buttonContainer: {
-    width: 100,
-    height: 30,
+    width: itemWidth * 0.36,
+    height: itemHeight * 0.09,
     backgroundColor: '#5d1115',
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 10,
-    borderRadius: 5,
+    borderRadius: moderateScale(5),
   },
-  button: {textAlign: 'center', color: '#fff'},
+  button: {
+    textAlign: 'center',
+    color: '#fff',
+  },
 });
 
 export default AboutGRTHaldSliderButton;
