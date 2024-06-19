@@ -128,14 +128,14 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     alignItems: 'center',
-    backgroundColor: '#FDF2F2',
+    backgroundColor: '#fef7f7',
     flexDirection: 'row',
     justifyContent: 'space-between',
     height: verticalScale(60),
   },
   dropdownButtonStyle: {
     height: 40,
-    backgroundColor: '#FDF2F2',
+    backgroundColor: '#fef7f7',
     borderRadius: 12,
     flexDirection: 'row',
     alignItems: 'center',

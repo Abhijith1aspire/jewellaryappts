@@ -2,16 +2,16 @@ import React from 'react';
 import {
   View,
   Text,
-  Image,
   StyleSheet,
   Dimensions,
   FlatList,
   ImageBackground,
   TouchableOpacity,
 } from 'react-native';
-import {placeHolderImage} from '../constants/constants';
-import {horizontalScale, verticalScale} from '../utils/Metrics';
-import {AdditionalField} from '../data/data';
+import {placeHolderImage} from '../../constants/constants';
+import {horizontalScale, verticalScale} from '../../utils/Metrics';
+import {AdditionalField} from '../../data/data';
+import FastImage from 'react-native-fast-image';
 
 type OfferSliderProps = {
   headerTitle: string | null;
@@ -72,18 +72,18 @@ const OnlineOffersHalfSliderButton: React.FC<OfferSliderProps> = ({
       <View style={[styles.slide, {height: slideHeight}, styles.shadowStyle]}>
         <View style={[styles.imageContainer, {height: imageHeight}]}>
           {item.image ? (
-            <Image
+            <FastImage
               source={{uri: `https://media-demo.grtjewels.com/${item.image}`}}
               style={styles.image}
-              resizeMode="cover"
+              resizeMode={FastImage.resizeMode.cover}
             />
           ) : (
-            <Image
+            <FastImage
               source={{
                 uri: placeHolderImage,
               }}
               style={styles.image}
-              resizeMode="cover"
+              resizeMode={FastImage.resizeMode.contain}
             />
           )}
         </View>

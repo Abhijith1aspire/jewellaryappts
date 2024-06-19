@@ -26,4 +26,5 @@ export type RootStackParamList = {
     ProfileDetailsScreen: {
       firstName: string;
     };
+    ProductListingPage:undefined;
   };

@@ -9,7 +9,7 @@ import {
 import SearchIcon from 'react-native-vector-icons/Ionicons';
 import CameraIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MicIcon from 'react-native-vector-icons/Feather';
-import {verticalScale, moderateScale} from '../utils/Metrics';
+import {verticalScale, moderateScale, horizontalScale} from '../utils/Metrics';
 
 type SearchProps = {
   onSearch: (text: string) => void;
@@ -61,10 +61,10 @@ export default Search;
 const styles = StyleSheet.create({
   container: {
     width: width * 0.95,
-    height: verticalScale(49),
+    height: verticalScale(40),
     borderRadius: 5,
-    paddingHorizontal: verticalScale(10),
-    backgroundColor: '#FDF2F2',
+    paddingHorizontal: horizontalScale(10),
+    backgroundColor: '#fef7f7',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

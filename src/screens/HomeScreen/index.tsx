@@ -1,3 +1,4 @@
+import React, {useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   Dimensions,
@@ -7,38 +8,37 @@ import {
   Text,
   View,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
 import MarketPriceDetails from '../../components/MarketPriceDetails';
 import LogoHeader from '../../components/LogoHeader';
 import Search from '../../components/Search';
-import CarouselSlider from '../../components/CarouselSlider';
-import OnlineOffersHalfSliderButton from '../../components/OnlineOffersHalfSliderButton';
+import CarouselSlider from '../../components/HomeScreen/CarouselSlider';
+import OnlineOffersHalfSliderButton from '../../components/HomeScreen/OnlineOffersHalfSliderButton';
 import {fetchData} from './actions';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
-import {HomePageBannerData} from './HomeScreenModal';
-import Slider from '../../components/LatestClassicsSlider';
-import OurBrandsStaticBannersButton from '../../components/OurBrandsStaticBanners';
-import GiftsHalfStaticButton from '../../components/GiftsHalfStaticButton';
-import StaticBannerSliderButton from '../../components/StaticBannerSliderButton';
-import FullSlider from '../../components/FullSlider';
-import AboutGRTHaldSliderButton from '../../components/AboutGRTHalfSliderButton';
-import LocationStaticBanners from '../../components/LocationStaticBanner';
-import VirtualShoppingHalfStaticBannerButton from '../../components/VirtualShoppingHalfStaticBannerButton';
-import LatestClassicsSlider from '../../components/LatestClassicsSlider';
-import CuratedClassicsTabSlider from '../../components/CuratedClassicsTabSlider';
-import JewellaryCustomizationStaticbanner from '../../components/JewellaryCustomizationStaticbanner';
+import LatestClassicsSlider from '../../components/HomeScreen/LatestClassicsSlider';
+import OurBrandsStaticBannersButton from '../../components/HomeScreen/OurBrandsStaticBanners';
+import GiftsHalfStaticButton from '../../components/HomeScreen/GiftsHalfStaticButton';
+import StaticBannerSliderButton from '../../components/HomeScreen/StaticBannerSliderButton';
+import FullSlider from '../../components/HomeScreen/FullSlider';
+import AboutGRTHaldSliderButton from '../../components/HomeScreen/AboutGRTHalfSliderButton';
+import LocationStaticBanners from '../../components/HomeScreen/LocationStaticBanner';
+import VirtualShoppingHalfStaticBannerButton from '../../components/HomeScreen/VirtualShoppingHalfStaticBannerButton';
+import CuratedClassicsTabSlider from '../../components/HomeScreen/CuratedClassicsTabSlider';
+import JewellaryCustomizationStaticbanner from '../../components/HomeScreen/JewellaryCustomizationStaticbanner';
+import {verticalScale} from '../../utils/Metrics';
+import BottomTabs from '../../components/HomeScreen/BottomTabs';
 
 const HomeScreen: React.FC = () => {
   const [searchText, setSearchText] = useState<string>('');
   const dispatch = useDispatch();
-  const [bannerDataResponse, setBannerDataResponse] =
-    useState<HomePageBannerData>([]);
+  const [bannerDataResponse, setBannerDataResponse] = useState<any>({});
   const scrollRef = useRef<ScrollView>(null);
 
   const bannerDataFromRedux = useSelector(
     (state: any) => state.bannerData?.bannerData,
   );
+  const errorNoDataFound = useSelector((state: any) => state.bannerData?.error);
   const isLoading = useSelector((state: any) => state.bannerData?.isLoading);
 
   useFocusEffect(
@@ -54,20 +54,20 @@ const HomeScreen: React.FC = () => {
     }
   }, [bannerDataFromRedux]);
 
-  const renderComponent = (item, index) => {
+  const renderComponent = (item: any, index: number) => {
     switch (item.type) {
       case 'carousel':
-        return item.additionalFields ? (
+        return (
           <CarouselSlider
             key={index}
             backgroundColor={item.backgroundColor}
             data={item.additionalFields}
             backgroundImage={item.backgroundImage}
           />
-        ) : null;
+        );
       case 'half-slider-button':
         if (item.title === 'Checkout our online offers') {
-          return item.additionalFields ? (
+          return (
             <OnlineOffersHalfSliderButton
               key={index}
               backgroundImage={item.backgroundImage}
@@ -75,10 +75,10 @@ const HomeScreen: React.FC = () => {
               headerTitle={item.title}
               backgroundColor={item.backgroundColor}
             />
-          ) : null;
+          );
         }
         if (item.title === 'About GRT') {
-          return item.additionalFields ? (
+          return (
             <AboutGRTHaldSliderButton
               key={index}
               data={item.additionalFields}
@@ -86,12 +86,11 @@ const HomeScreen: React.FC = () => {
               backgroundColor={''}
               backgroundImage={item.backgroundImage}
             />
-          ) : null;
+          );
         }
-
         break;
       case 'slider':
-        return item.additionalFields ? (
+        return (
           <LatestClassicsSlider
             key={index}
             backgroundColor={item.backgroundColor}
@@ -99,18 +98,18 @@ const HomeScreen: React.FC = () => {
             headerTitle={item.title}
             backgroundImage={item.backgroundImage}
           />
-        ) : null;
+        );
       case 'tab':
-        return item.tabItems ? (
+        return (
           <CuratedClassicsTabSlider
             key={index}
             headerTitle={item.title}
             tabItems={item.tabItems}
           />
-        ) : null;
+        );
       case 'static-banners-button':
         if (item.title === 'Our Brands') {
-          return item.additionalFields ? (
+          return (
             <OurBrandsStaticBannersButton
               key={index}
               backgroundColor={item.backgroundColor}
@@ -118,13 +117,13 @@ const HomeScreen: React.FC = () => {
               headerTitle={item.title}
               backgroundImage={item.backgroundImage}
             />
-          ) : null;
+          );
         }
         if (
           item.title === 'Jewellery Customisation' ||
           item.title === 'Save big! With our Jewellery Savings Schemes'
         ) {
-          return item.additionalFields ? (
+          return (
             <JewellaryCustomizationStaticbanner
               key={index}
               backgroundColor={item.backgroundColor}
@@ -133,12 +132,12 @@ const HomeScreen: React.FC = () => {
               cssClass={item.cssClass}
               backgroundImage={item.backgroundImage}
             />
-          ) : null;
+          );
         }
         break;
       case 'half-static-banners-button':
         if (item.title === 'Gifting your loved ones just got easier') {
-          return item.additionalFields ? (
+          return (
             <GiftsHalfStaticButton
               key={index}
               data={item.additionalFields}
@@ -146,10 +145,10 @@ const HomeScreen: React.FC = () => {
               backgroundColor={item.backgroundColor}
               backgroundImage={item.backgroundImage}
             />
-          ) : null;
+          );
         }
         if (item.title === 'Virtual Shopping') {
-          return item.additionalFields ? (
+          return (
             <VirtualShoppingHalfStaticBannerButton
               key={index}
               data={item.additionalFields}
@@ -157,11 +156,11 @@ const HomeScreen: React.FC = () => {
               backgroundColor={item.backgroundColor}
               backgroundImage={item.backgroundImage}
             />
-          ) : null;
+          );
         }
         break;
       case 'static-banner-slider-button':
-        return item.additionalFields ? (
+        return (
           <StaticBannerSliderButton
             key={index}
             data={item.additionalFields}
@@ -169,9 +168,9 @@ const HomeScreen: React.FC = () => {
             backgroundColor={item.backgroundColor}
             backgroundImage={item.backgroundImage}
           />
-        ) : null;
+        );
       case 'full-slider':
-        return item.additionalFields ? (
+        return (
           <FullSlider
             key={index}
             data={item.additionalFields}
@@ -179,17 +178,17 @@ const HomeScreen: React.FC = () => {
             backgroundColor={item.backgroundColor}
             backgroundImage={item.backgroundImage}
           />
-        ) : null;
+        );
       case 'static-banners':
         if (item.title === 'Come visit us at any of our store') {
-          return item.additionalFields ? (
+          return (
             <LocationStaticBanners
               key={index}
               backgroundColor={item.backgroundColor}
               data={item.additionalFields}
               headerTitle={item.title}
             />
-          ) : null;
+          );
         }
         break;
       default:
@@ -198,7 +197,7 @@ const HomeScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={styles.container}>
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
         stickyHeaderIndices={[1]}
@@ -206,45 +205,47 @@ const HomeScreen: React.FC = () => {
         <MarketPriceDetails />
         <View style={styles.headerContainer}>
           <LogoHeader />
-          <View style={{alignItems: 'center'}}>
+          <View style={styles.search}>
             <Search onSearch={setSearchText} />
           </View>
         </View>
-        <Text>{bannerDataResponse?.error}</Text>
+        <Text>{errorNoDataFound}</Text>
         {isLoading ? (
-          <View
-            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="black" />
           </View>
         ) : (
-          bannerDataResponse?.data?.getTemplateList.items?.map(renderComponent)
+          bannerDataResponse?.data?.getTemplateList?.items?.map(
+            (item: any, index: number) => renderComponent(item, index),
+          )
         )}
       </ScrollView>
     </SafeAreaView>
   );
 };
 
-export default HomeScreen;
-
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   headerContainer: {
     backgroundColor: '#FFFFFF',
     width: '100%',
     zIndex: 10,
   },
+  search: {
+    alignItems: 'center',
+  },
   scrollContainer: {
     alignItems: 'center',
-    backgroundColor: '#FDF2F2',
-    paddingBottom: 20,
+    backgroundColor: '#fdefe9',
+    paddingBottom: verticalScale(20),
   },
-  marketPriceDetailsContainer: {
-    width: '100%',
-    backgroundColor: '#FFFFFF',
-  },
-  sectionTitle: {
-    fontSize: 20,
-    color: '#5d1115',
-    fontWeight: '400',
-    marginVertical: 10,
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
+
+export default HomeScreen;

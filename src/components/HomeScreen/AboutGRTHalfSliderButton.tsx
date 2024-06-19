@@ -2,33 +2,37 @@ import React from 'react';
 import {
   View,
   Text,
-  Image,
   StyleSheet,
   Dimensions,
   FlatList,
-  TouchableOpacity,
   ImageBackground,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
-import {AdditionalField} from '../data/data';
-import {placeHolderImage} from '../constants/constants';
-import {horizontalScale, moderateScale, verticalScale} from '../utils/Metrics';
+import {AdditionalField} from '../../screens/HomeScreen/HomeScreenModal';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {placeHolderImage} from '../../constants/constants';
+import {
+  fontScale,
+  horizontalScale,
+  moderateScale,
+  verticalScale,
+} from '../../utils/Metrics';
+import FastImage from 'react-native-fast-image';
 
-type HalfStaticProps = {
+type AboutGRTHaldSliderButtonProps = {
   headerTitle: string | null;
-  backgroundColor: string | null;
+  backgroundColor?: string | null;
   data: AdditionalField[] | undefined;
-  backgroundImage: string | null;
+  backgroundImage?: string | null;
 };
 
 const {width, height} = Dimensions.get('window');
 const itemWidth = width - horizontalScale(60);
-const slideHeight = height * 0.52;
+const itemHeight = height * 0.4;
 
-const GiftsHalfStaticButton: React.FC<HalfStaticProps> = ({
+const AboutGRTHaldSliderButton: React.FC<AboutGRTHaldSliderButtonProps> = ({
+  backgroundColor,
   data,
   headerTitle,
-  backgroundColor,
   backgroundImage,
 }) => {
   const validData = data?.filter(
@@ -45,37 +49,29 @@ const GiftsHalfStaticButton: React.FC<HalfStaticProps> = ({
     <View style={styles.slide}>
       <View style={styles.imageContainer}>
         {item.image ? (
-          <Image
-            source={{
-              uri: `https://media-demo.grtjewels.com/${item.image}`,
-            }}
+          <FastImage
+            source={{uri: `https://media-demo.grtjewels.com/${item.image}`}}
             style={styles.image}
+            resizeMode={FastImage.resizeMode.cover}
           />
         ) : (
-          <Image
-            source={{
-              uri: placeHolderImage,
-            }}
+          <FastImage
+            source={{uri: placeHolderImage}}
             style={styles.image}
-            resizeMode="contain"
+            resizeMode={FastImage.resizeMode.contain}
           />
         )}
       </View>
       <View style={styles.contentContainer}>
-        {item.title && <Text style={styles.title}>{item.title}</Text>}
-        {item.content && <Text style={styles.content}>{item.content}</Text>}
-        {item.linkText && renderButton(item.linkText)}
+        <View style={styles.textContainer}>
+          {item.title && <Text style={styles.title}>{item.title}</Text>}
+          {item.content && <Text style={styles.content}>{item.content}</Text>}
+        </View>
+        <TouchableOpacity style={styles.buttonContainer}>
+          <Text style={styles.button}>Read More</Text>
+        </TouchableOpacity>
       </View>
     </View>
-  );
-
-  const renderButton = (text: string) => (
-    <TouchableOpacity
-      style={styles.button}
-      onPress={() => console.log('Shop Now')}>
-      <Text style={styles.buttonText}>{text}</Text>
-      <Icon name="arrowright" size={moderateScale(22)} color="#5d1115" />
-    </TouchableOpacity>
   );
 
   const renderFlatList = () => {
@@ -84,18 +80,21 @@ const GiftsHalfStaticButton: React.FC<HalfStaticProps> = ({
         {headerTitle && <Text style={styles.headerText}>{headerTitle}</Text>}
         {validData && validData.length > 0 ? (
           <FlatList
-            data={validData}
+            data={data}
             renderItem={renderItem}
             keyExtractor={(item, index) => index.toString()}
             horizontal
             pagingEnabled
             showsHorizontalScrollIndicator={false}
-            snapToInterval={itemWidth}
+            snapToInterval={itemWidth + horizontalScale(20)}
             decelerationRate="fast"
-            contentContainerStyle={styles.flatListContainer}
+            contentContainerStyle={{
+              paddingHorizontal: horizontalScale(10),
+              paddingBottom: verticalScale(20),
+            }}
           />
         ) : (
-          <Text style={styles.noDataText}>No offers available</Text>
+          <Text style={styles.noDataText}>No Data available</Text>
         )}
       </>
     );
@@ -132,7 +131,6 @@ const GiftsHalfStaticButton: React.FC<HalfStaticProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#e3bc8c',
     paddingVertical: verticalScale(30),
   },
   backgroundImage: {
@@ -145,71 +143,49 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   headerText: {
-    fontSize: moderateScale(24),
+    fontSize: fontScale(24),
     fontWeight: '400',
     textAlign: 'center',
     marginVertical: verticalScale(10),
     color: '#5d1115',
-    paddingHorizontal: horizontalScale(50),
-    marginBottom: verticalScale(20),
   },
   slide: {
     width: itemWidth,
-    height: slideHeight,
-    backgroundColor: '#fbecdf',
-    marginHorizontal: horizontalScale(7),
-    borderRadius: moderateScale(8),
-    padding: horizontalScale(7),
+    height: itemHeight,
+    backgroundColor: '#fef7f7',
+    marginHorizontal: horizontalScale(8),
+    borderRadius: moderateScale(5),
+    elevation: 4,
+    alignItems: 'center',
+    paddingBottom: verticalScale(10),
   },
   imageContainer: {
     width: '100%',
-    height: '52%',
+    height: '48%',
     overflow: 'hidden',
-    borderRadius: moderateScale(8),
   },
   image: {
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
-  },
-  contentContainer: {
-    flex: 1,
-    width: '70%',
-    padding: horizontalScale(10),
-    alignSelf: 'flex-start',
+    borderRadius: moderateScale(10),
   },
   title: {
-    fontSize: (22 * itemWidth * 0.037) / 14,
-    fontWeight: '600',
+    fontSize: fontScale(20, itemWidth),
+    fontWeight: '500',
     color: '#5d1115',
-    textAlign: 'left',
-    flex: 1,
   },
   content: {
-    fontSize: itemWidth * 0.037,
+    fontSize: fontScale(14, itemWidth),
+    marginVertical: verticalScale(5),
     color: '#5d1115',
-    fontWeight: '500',
-    marginTop: verticalScale(10),
-    flex: 1,
   },
-  button: {
-    backgroundColor: '#f59090',
-    borderRadius: moderateScale(4),
-    marginVertical: verticalScale(20),
-    width: itemWidth / 3,
-    height: slideHeight / 14,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonText: {
-    fontSize: (15 * itemWidth * 0.037) / 14,
-    fontWeight: '600',
-    color: '#5d1115',
-    marginHorizontal: horizontalScale(10),
-  },
-  flatListContainer: {
-    paddingHorizontal: horizontalScale(10),
+  contentContainer: {
+    paddingLeft: horizontalScale(12),
+    paddingBottom: verticalScale(10),
+    height: '52%',
+    width: '100%',
+    justifyContent: 'space-between',
   },
   noDataText: {
     fontSize: moderateScale(18),
@@ -217,6 +193,23 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: verticalScale(20),
   },
+  textContainer: {
+    width: '90%',
+    alignSelf: 'flex-start',
+    marginTop: verticalScale(12),
+  },
+  buttonContainer: {
+    width: itemWidth * 0.36,
+    height: itemHeight * 0.09,
+    backgroundColor: '#5d1115',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: moderateScale(5),
+  },
+  button: {
+    textAlign: 'center',
+    color: '#fff',
+  },
 });
 
-export default GiftsHalfStaticButton;
+export default AboutGRTHaldSliderButton;

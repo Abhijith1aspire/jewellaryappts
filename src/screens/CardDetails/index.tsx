@@ -103,7 +103,7 @@ const CardDetails: React.FC<CardDetailsProps> = ({route}) => {
           }}
           color="#5d1115"
           minWidth={200}
-          textColor="#FDF2F2"
+          textColor="#fef7f7"
           borderRadius={20}
         />
         <Button
@@ -133,7 +133,7 @@ const CardDetails: React.FC<CardDetailsProps> = ({route}) => {
           }}
           color="#5d1115"
           minWidth={200}
-          textColor="#FDF2F2"
+          textColor="#fef7f7"
           borderRadius={20}
         />
       </View>
@@ -145,7 +145,7 @@ const CardDetails: React.FC<CardDetailsProps> = ({route}) => {
           }}
           color="black"
           minWidth={200}
-          textColor="#FDF2F2"
+          textColor="#fef7f7"
         />
       </View>
     </View>

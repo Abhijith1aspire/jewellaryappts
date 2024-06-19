@@ -9,9 +9,14 @@ import {
   FlatList,
   ImageBackground,
 } from 'react-native';
-import {AdditionalField} from '../screens/HomeScreen/HomeScreenModal';
-import {placeHolderImage} from '../constants/constants';
-import {horizontalScale, moderateScale, verticalScale} from '../utils/Metrics';
+import {AdditionalField} from '../../screens/HomeScreen/HomeScreenModal';
+import {placeHolderImage} from '../../constants/constants';
+import {
+  horizontalScale,
+  moderateScale,
+  verticalScale,
+} from '../../utils/Metrics';
+import FastImage from 'react-native-fast-image';
 
 type StaticBannerProps = {
   headerTitle: string | null;
@@ -44,17 +49,17 @@ const OurBrandsStaticBannersButton: React.FC<StaticBannerProps> = ({
     <View style={styles.slide}>
       <View style={styles.imageContainer}>
         {item.image ? (
-          <Image
+          <FastImage
             source={{
               uri: `https://media-demo.grtjewels.com/${item.image}`,
             }}
             style={[styles.image, {height: itemHeight}]}
           />
         ) : (
-          <Image
+          <FastImage
             source={{uri: placeHolderImage}}
             style={[styles.image, {height: itemHeight}]}
-            resizeMode="contain"
+            resizeMode={FastImage.resizeMode.contain}
           />
         )}
         <View style={styles.contents}>

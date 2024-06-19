@@ -1,13 +1,21 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
-import LikeIcon from 'react-native-vector-icons/AntDesign';
-import Icon from 'react-native-vector-icons/Feather';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
+import Icon from 'react-native-vector-icons/AntDesign';
+import CarouselIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useDispatch, useSelector} from 'react-redux';
 import {addToFav} from '../screens/FavoritesScreen/action';
 import {isItemInCart} from '../utils/utils';
 import RootStackParamList from '../props/prop';
+import {horizontalScale, moderateScale, verticalScale} from '../utils/Metrics';
 
 type CarditemProps = {
   image: string;
@@ -29,6 +37,8 @@ type CardProps = {
   searchText?: string;
   data: CarditemProps[];
 };
+
+const {width, height} = Dimensions.get('window');
 
 const JewelleryItemRow: React.FC<CarditemProps> = ({
   image,
@@ -63,16 +73,18 @@ const JewelleryItemRow: React.FC<CarditemProps> = ({
           id: id,
         })
       }>
-      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        <View style={{flexDirection: 'row'}}>
-          <TouchableOpacity style={styles.iconContainer}>
-            <Icon name="bookmark" size={18} color="#5d1115" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconContainer}>
-            <Icon name="star" size={18} color="#5d1115" />
-          </TouchableOpacity>
-        </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingHorizontal: 5,
+        }}>
+        <TouchableOpacity style={styles.iconContainer}>
+          <Icon name="staro" size={18} color="#5d1115" />
+        </TouchableOpacity>
         <TouchableOpacity
+          style={styles.iconContainer}
           onPress={() => {
             if (isItemInCart(id, favItems)) {
               console.log('Selected Item is already present in you favorites');
@@ -95,25 +107,33 @@ const JewelleryItemRow: React.FC<CarditemProps> = ({
               );
             }
           }}>
-          <LikeIcon
-            name="hearto"
-            size={18}
-            style={{marginRight: 10, marginTop: 20}}
-            color="#5d1115"
-          />
+          <Icon name="hearto" size={18} color="#5d1115" />
         </TouchableOpacity>
       </View>
-      <Image source={{uri: image}} style={styles.image} />
+      <View
+        style={{
+          height: height * 0.16,
+          width: '100%',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Image source={{uri: image}} style={styles.image} />
+      </View>
       <View style={styles.divider} />
       <View
         style={{
           flexDirection: 'row',
           alignItems: 'center',
+          justifyContent: 'space-between',
+          paddingHorizontal: 10,
         }}>
-        <Text style={styles.priceText}>₹{price}</Text>
-        <Text style={styles.originalpriceText}>₹{originalprice}</Text>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Text style={styles.priceText}>₹{price}</Text>
+          <Text style={styles.originalpriceText}>₹{originalprice}</Text>
+        </View>
+        <CarouselIcon name="view-carousel-outline" size={28} color="#7b2e33" />
       </View>
-      <View style={{paddingBottom: 10}}>
+      <View style={{paddingBottom: 1}}>
         <Text style={styles.offerText}>{offer} Off</Text>
       </View>
     </TouchableOpacity>
@@ -157,59 +177,55 @@ export default Card;
 
 const styles = StyleSheet.create({
   container: {
+    width: width,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    paddingHorizontal: 10,
-    paddingVertical: 10,
+    paddingHorizontal: horizontalScale(10),
+    paddingVertical: verticalScale(20),
   },
   itemContainer: {
-    height: 240,
+    height: height * 0.29,
     width: '47%',
     margin: '1.5%',
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-    paddingVertical: 10,
-    borderRadius: 5,
+    backgroundColor: '#ffffff',
+    paddingVertical: verticalScale(12),
+    borderRadius: moderateScale(5),
+    elevation: moderateScale(2),
   },
   iconContainer: {
-    height: 24,
-    width: 24,
+    height: verticalScale(24),
+    width: horizontalScale(24),
+    borderRadius: moderateScale(12),
     backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 2,
-    marginTop: 15,
   },
   image: {
-    width: '70%',
-    height: '70%',
+    width: '90%',
+    height: '80%',
     resizeMode: 'contain',
-    alignSelf: 'center',
   },
   divider: {
     borderBottomColor: '#CED0CE',
-    borderBottomWidth: 1,
-    marginVertical: 5,
+    borderBottomWidth: moderateScale(1),
+    marginVertical: verticalScale(5),
     width: '100%',
   },
   priceText: {
-    fontSize: 16,
+    fontSize: moderateScale(16),
     fontWeight: 'bold',
-    marginTop: 5,
     color: '#5d1115',
-    marginLeft: 10,
   },
   originalpriceText: {
-    fontSize: 12,
-    marginTop: 5,
-    marginLeft: 20,
+    fontSize: moderateScale(12),
+    marginLeft: horizontalScale(20),
     textDecorationLine: 'line-through',
+    fontWeight: '400',
   },
   offerText: {
-    fontSize: 13,
-    marginVertical: 5,
+    fontSize: moderateScale(13),
+    marginVertical: verticalScale(1),
     color: '#5d1115',
-    marginLeft: 10,
+    marginLeft: horizontalScale(10),
   },
 });

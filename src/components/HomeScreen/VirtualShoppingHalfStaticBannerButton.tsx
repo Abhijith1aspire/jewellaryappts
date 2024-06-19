@@ -8,10 +8,11 @@ import {
   TouchableOpacity,
   ImageBackground,
 } from 'react-native';
-import {AdditionalField} from '../data/data';
-import {placeHolderImage} from '../constants/constants';
+import {AdditionalField} from '../../data/data';
+import {placeHolderImage} from '../../constants/constants';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {moderateScale, verticalScale} from '../utils/Metrics';
+import {moderateScale, verticalScale} from '../../utils/Metrics';
+import FastImage from 'react-native-fast-image';
 
 type HalfStaticProps = {
   headerTitle: string | null;
@@ -43,12 +44,16 @@ const VirtualShoppingHalfStaticBannerButton: React.FC<HalfStaticProps> = ({
     <View style={[styles.slide, {backgroundColor: '#73161b'}]}>
       <View style={styles.imageContainer}>
         {item?.image ? (
-          <Image
+          <FastImage
             source={{uri: `https://media-demo.grtjewels.com/${item.image}`}}
             style={styles.image}
           />
         ) : (
-          <Image source={{uri: placeHolderImage}} style={styles.image} />
+          <FastImage
+            source={{uri: placeHolderImage}}
+            style={styles.image}
+            resizeMode={FastImage.resizeMode.contain}
+          />
         )}
       </View>
       <View style={styles.contentContainer}>
@@ -93,12 +98,16 @@ const VirtualShoppingHalfStaticBannerButton: React.FC<HalfStaticProps> = ({
           overflow: 'hidden',
         }}>
         {item?.image ? (
-          <Image
+          <FastImage
             source={{uri: `https://media-demo.grtjewels.com/${item.image}`}}
             style={styles.image}
           />
         ) : (
-          <Image source={{uri: placeHolderImage}} style={styles.image} />
+          <FastImage
+            source={{uri: placeHolderImage}}
+            style={styles.image}
+            resizeMode={FastImage.resizeMode.contain}
+          />
         )}
       </View>
       <View
@@ -201,7 +210,7 @@ const itemHeight = height * 0.45;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FDF2F2',
+    backgroundColor: '#fef7f7',
     paddingVertical: verticalScale(40),
     width: '100%',
     alignItems: 'center',
@@ -229,7 +238,7 @@ const styles = StyleSheet.create({
   slide: {
     height: itemHeight,
     width: itemWidth,
-    backgroundColor: '#FDF2F2',
+    backgroundColor: '#fef7f7',
     borderRadius: moderateScale(8),
     marginBottom: verticalScale(20),
   },

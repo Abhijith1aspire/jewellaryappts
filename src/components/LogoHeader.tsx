@@ -23,16 +23,16 @@ type CartScreenNavigationProp = StackNavigationProp<
 
 const LogoHeader: React.FC = () => {
   const navigation = useNavigation<CartScreenNavigationProp>();
-  const {width, height} = Dimensions.get('window');
-  const logoWidth = width * 0.25;
+  const {width} = Dimensions.get('window');
+  const logoWidth = width * 0.2;
 
   return (
     <View style={styles.container}>
-      <View style={styles.logoContainer}>
+      <View style={styles.leftContainer}>
         <TouchableOpacity>
           <MenuIcon
             name="menu"
-            size={moderateScale(25)}
+            size={moderateScale(26)}
             color="#5d1115"
             style={styles.icon}
           />
@@ -46,17 +46,17 @@ const LogoHeader: React.FC = () => {
         <TouchableOpacity>
           <StarIcon
             name="star-o"
-            size={moderateScale(23)}
+            size={moderateScale(26)}
             color="#5d1115"
-            style={styles.icon}
+            style={[styles.icon, {marginRight: 8}]}
           />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('UserScreen')}>
           <AccountIcon
             name="account-outline"
-            size={moderateScale(26)}
+            size={moderateScale(28)}
             color="#5d1115"
-            style={styles.icon}
+            style={[styles.icon, {marginRight: 8}]}
           />
         </TouchableOpacity>
         <TouchableOpacity
@@ -65,7 +65,7 @@ const LogoHeader: React.FC = () => {
             name="hearto"
             size={moderateScale(22)}
             color="#5d1115"
-            style={styles.icon}
+            style={[styles.icon, {marginRight: 8}]}
           />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('CartScreen')}>
@@ -73,7 +73,7 @@ const LogoHeader: React.FC = () => {
             name="shopping-bag"
             size={moderateScale(22)}
             color="#5d1115"
-            style={styles.icon}
+            style={[styles.icon, {marginRight: 8}]}
           />
         </TouchableOpacity>
       </View>
@@ -88,15 +88,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    flex: 1,
     height: verticalScale(70),
+    backgroundColor: 'white',
   },
-  logoContainer: {
+  leftContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   logo: {
-    height: moderateScale(50),
+    height: moderateScale(70),
     resizeMode: 'contain',
   },
   iconContainer: {
@@ -104,6 +104,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   icon: {
-    marginHorizontal: moderateScale(10),
+    marginLeft: moderateScale(10),
   },
 });

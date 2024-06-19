@@ -9,9 +9,10 @@ import {
   TouchableOpacity,
   ImageBackground,
 } from 'react-native';
-import {AdditionalField} from '../screens/HomeScreen/HomeScreenModal';
-import {placeHolderImage} from '../constants/constants';
-import {horizontalScale, verticalScale} from '../utils/Metrics';
+import {AdditionalField} from '../../screens/HomeScreen/HomeScreenModal';
+import {placeHolderImage} from '../../constants/constants';
+import {horizontalScale, verticalScale} from '../../utils/Metrics';
+import FastImage from 'react-native-fast-image';
 
 type LocationStaticBannerProps = {
   headerTitle: string | null;
@@ -67,18 +68,19 @@ const LocationStaticBanners: React.FC<LocationStaticBannerProps> = ({
     <View style={styles.slide}>
       <View style={styles.imageContainer}>
         {item.image ? (
-          <Image
+          <FastImage
             source={{
               uri: `https://media-demo.grtjewels.com/${item.image}`,
             }}
             style={styles.image}
           />
         ) : (
-          <Image
+          <FastImage
             source={{
               uri: placeHolderImage,
             }}
             style={styles.image}
+            resizeMode={FastImage.resizeMode.contain}
           />
         )}
       </View>

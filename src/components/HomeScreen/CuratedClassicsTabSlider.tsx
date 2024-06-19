@@ -2,17 +2,24 @@ import React, {useState} from 'react';
 import {
   View,
   Text,
-  Image,
   StyleSheet,
   Dimensions,
   FlatList,
   ScrollView,
   ImageBackground,
 } from 'react-native';
-import {AdditionalField, TabItem} from '../screens/HomeScreen/HomeScreenModal';
-import BannerButtons from './BannerButtons';
-import {placeHolderImage} from '../constants/constants';
-import {verticalScale, horizontalScale, moderateScale} from '../utils/Metrics';
+import {
+  AdditionalField,
+  TabItem,
+} from '../../screens/HomeScreen/HomeScreenModal';
+import BannerButtons from '../HomeScreen/BannerButtons';
+import {placeHolderImage} from '../../constants/constants';
+import {
+  verticalScale,
+  horizontalScale,
+  moderateScale,
+} from '../../utils/Metrics';
+import FastImage from 'react-native-fast-image';
 
 type OnlineOffersTabSliderProps = {
   headerTitle: string | null;
@@ -40,15 +47,15 @@ const CuratedClassicsTabSlider: React.FC<OnlineOffersTabSliderProps> = ({
       <View style={styles.slide}>
         <View style={{width: '100%', height: imageHeight}}>
           {item.image ? (
-            <Image
+            <FastImage
               source={{uri: `https://media-demo.grtjewels.com/${item.image}`}}
               style={[styles.image, {height: imageHeight}]}
             />
           ) : (
-            <Image
+            <FastImage
               source={{uri: placeHolderImage}}
               style={[styles.image, {height: imageHeight}]}
-              resizeMode="contain"
+              resizeMode={FastImage.resizeMode.contain}
             />
           )}
         </View>

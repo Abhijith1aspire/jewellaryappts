@@ -1,16 +1,20 @@
 import React, {useState} from 'react';
 import {
   View,
-  Image,
   StyleSheet,
   Dimensions,
   FlatList,
   Text,
   ImageBackground,
 } from 'react-native';
-import {AdditionalField} from '../screens/HomeScreen/HomeScreenModal';
-import {placeHolderImage} from '../constants/constants';
-import {horizontalScale, verticalScale, moderateScale} from '../utils/Metrics';
+import {AdditionalField} from '../../screens/HomeScreen/HomeScreenModal';
+import {placeHolderImage} from '../../constants/constants';
+import {
+  horizontalScale,
+  verticalScale,
+  moderateScale,
+} from '../../utils/Metrics';
+import FastImage from 'react-native-fast-image';
 
 type SliderProps = {
   backgroundColor?: string | null;
@@ -41,12 +45,13 @@ const CarouselSlider: React.FC<SliderProps> = ({
   const renderItem = ({item}: {item: AdditionalField}) => (
     <View style={[styles.slide, {height: imageHeight}]}>
       {item?.image ? (
-        <Image
+        <FastImage
           source={{uri: `https://media-demo.grtjewels.com/${item?.image}`}}
           style={[styles.image, {height: imageHeight}]}
+          resizeMode={FastImage.resizeMode.stretch}
         />
       ) : (
-        <Image
+        <FastImage
           source={{uri: placeHolderImage}}
           style={[styles.image, {height: imageHeight}]}
         />

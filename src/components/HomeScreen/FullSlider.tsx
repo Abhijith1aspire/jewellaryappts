@@ -8,10 +8,15 @@ import {
   FlatList,
   ImageBackground,
 } from 'react-native';
-import {AdditionalField} from '../screens/HomeScreen/HomeScreenModal';
+import {AdditionalField} from '../../screens/HomeScreen/HomeScreenModal';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
-import {placeHolderImage} from '../constants/constants';
-import {horizontalScale, moderateScale, verticalScale} from '../utils/Metrics';
+import {placeHolderImage} from '../../constants/constants';
+import {
+  horizontalScale,
+  moderateScale,
+  verticalScale,
+} from '../../utils/Metrics';
+import FastImage from 'react-native-fast-image';
 
 type FullSliderProps = {
   headerTitle: string | null;
@@ -48,15 +53,18 @@ const FullSlider: React.FC<FullSliderProps> = ({
         color="white"
         style={styles.icon}
       />
-      <Image
-        source={{
-          uri: item.image
-            ? `https://media-demo.grtjewels.com/${item.image}`
-            : placeHolderImage,
-        }}
-        style={[styles.image, {height: itemHeight * 0.85}]}
-        onError={error => console.log('Image load error:', error)}
-      />
+      {item?.image ? (
+        <FastImage
+          source={{uri: `https://media-demo.grtjewels.com/${item.image}`}}
+          style={[styles.image, {height: itemHeight * 0.85}]}
+        />
+      ) : (
+        <FastImage
+          source={{uri: placeHolderImage}}
+          style={[styles.image, {height: itemHeight * 0.85}]}
+          resizeMode={FastImage.resizeMode.contain}
+        />
+      )}
     </View>
   );
 

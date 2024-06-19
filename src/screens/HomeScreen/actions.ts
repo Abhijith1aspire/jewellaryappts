@@ -3,9 +3,9 @@ import {
   FETCH_BANNER_DETAILS_FAILURE,
   FETCH_BANNER_DETAILS_REQUEST,
 } from './actionTypes';
-import { Dispatch } from 'redux';
-import { ThunkAction } from 'redux-thunk';
-import { RootState } from '../../store/rootreducers/index';
+import {Dispatch} from 'redux';
+import {ThunkAction} from 'redux-thunk';
+import {RootState} from '../../store/rootreducers/index';
 import axios from 'axios';
 
 type FetchDataType = {
@@ -13,17 +13,22 @@ type FetchDataType = {
   payload?: any;
 };
 
-export const fetchData = (): ThunkAction<void, RootState, unknown, FetchDataType> => async (dispatch: Dispatch<FetchDataType>) => {
-  dispatch({ type: FETCH_BANNER_DETAILS_REQUEST });
+export const fetchData =
+  (): ThunkAction<void, RootState, unknown, FetchDataType> =>
+  async (dispatch: Dispatch<FetchDataType>) => {
+    dispatch({type: FETCH_BANNER_DETAILS_REQUEST});
 
-  try {
-    const data = await getBannerDetails();
-    dispatch({ type: FETCH_BANNER_DETAILS, payload: data });
-  } catch (error) {
-    console.error(error);
-    dispatch({ type: FETCH_BANNER_DETAILS_FAILURE, payload: { error: 'Something went wrong' } });
-  }
-};
+    try {
+      const data = await getBannerDetails();
+      dispatch({type: FETCH_BANNER_DETAILS, payload: data});
+    } catch (error) {
+      console.error(error);
+      dispatch({
+        type: FETCH_BANNER_DETAILS_FAILURE,
+        payload: {error: 'Something went wrong'},
+      });
+    }
+  };
 
 const getBannerDetails = async () => {
   const data = JSON.stringify({

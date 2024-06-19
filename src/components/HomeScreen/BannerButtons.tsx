@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 
 const Buttons = ({title, isSelected, onPress}) => {
-  const buttonColor = isSelected ? '#5d1115' : '#FDF2F2';
-  const textColor = isSelected ? '#FDF2F2' : '#5d1115';
+  const buttonColor = isSelected ? '#5d1115' : '#fef7f7';
+  const textColor = isSelected ? '#fef7f7' : '#5d1115';
 
   const width = Math.max(80, title.length * 10 + 10);
 

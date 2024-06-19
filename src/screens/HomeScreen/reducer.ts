@@ -19,11 +19,17 @@ const initialState: BannerData = {
 const bannerDataReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case FETCH_BANNER_DETAILS_REQUEST:
-      return { ...state, isLoading: true, error: null };
+      return {...state, isLoading: true, error: null};
     case FETCH_BANNER_DETAILS:
-      return { ...state, bannerData: action.payload, isLoading: false };
+      return {...state, bannerData: action.payload, isLoading: false};
     case FETCH_BANNER_DETAILS_FAILURE:
-      return { ...state, bannerData: [], isLoading: false, error: action.payload.error };
+      console.log('reducer', action.payload.error);
+      return {
+        ...state,
+        bannerData: [],
+        isLoading: false,
+        error: action.payload.error,
+      };
     default:
       return state;
   }

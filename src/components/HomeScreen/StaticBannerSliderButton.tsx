@@ -2,27 +2,33 @@ import React from 'react';
 import {
   View,
   Text,
-  Image,
   StyleSheet,
   Dimensions,
   FlatList,
   ImageBackground,
 } from 'react-native';
-import {AdditionalField} from '../screens/HomeScreen/HomeScreenModal';
-import {placeHolderImage} from '../constants/constants';
-import {horizontalScale, moderateScale, verticalScale} from '../utils/Metrics';
+import {AdditionalField} from '../../screens/HomeScreen/HomeScreenModal';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {placeHolderImage} from '../../constants/constants';
+import {
+  horizontalScale,
+  moderateScale,
+  verticalScale,
+} from '../../utils/Metrics';
+import FastImage from 'react-native-fast-image';
 
-type OnlineOffersSliderProps = {
+type StaticBannerSliderButtonProps = {
   headerTitle: string | null;
-  backgroundColor?: string | null;
-  data?: AdditionalField[];
-  backgroundImage?: string | null;
+  backgroundColor: string | null;
+  data: AdditionalField[];
+  backgroundImage: string | null;
 };
 
 const {width, height} = Dimensions.get('window');
-const itemWidth = width / 2 - 66;
+const itemWidth = width / 2 - horizontalScale(10);
+const itemHeight = height * 0.42;
 
-const LatestClassicsSlider: React.FC<OnlineOffersSliderProps> = ({
+const StaticBannerSliderButton: React.FC<StaticBannerSliderButtonProps> = ({
   backgroundColor,
   data,
   headerTitle,
@@ -38,25 +44,27 @@ const LatestClassicsSlider: React.FC<OnlineOffersSliderProps> = ({
       item.image,
   );
 
-  const renderItem = ({item}: {item: AdditionalField}) => {
-    const imageHeight = height * 0.22;
-    return (
-      <View style={styles.slide}>
-        {item.image ? (
-          <Image
-            source={{uri: `https://media-demo.grtjewels.com/${item.image}`}}
-            style={[styles.image, {height: imageHeight}]}
-          />
-        ) : (
-          <Image
-            source={{uri: placeHolderImage}}
-            style={[styles.image, {height: imageHeight}]}
-          />
-        )}
-        {item.title && <Text style={styles.title}>{item.title}</Text>}
-      </View>
-    );
-  };
+  const renderItem = ({item}: {item: AdditionalField}) => (
+    <View style={styles.slide}>
+      {item.image ? (
+        <FastImage
+          source={{uri: `https://media-demo.grtjewels.com/${item.image}`}}
+          style={styles.image}
+        />
+      ) : (
+        <FastImage
+          source={{uri: placeHolderImage}}
+          style={styles.image}
+          resizeMode={FastImage.resizeMode.contain}
+        />
+      )}
+      {item.title && (
+        <TouchableOpacity style={styles.titleButton}>
+          <Text style={styles.title}>{item.title}</Text>
+        </TouchableOpacity>
+      )}
+    </View>
+  );
 
   const renderFlatList = () => {
     return (
@@ -70,8 +78,9 @@ const LatestClassicsSlider: React.FC<OnlineOffersSliderProps> = ({
             horizontal
             pagingEnabled
             showsHorizontalScrollIndicator={false}
-            snapToInterval={itemWidth * 2 + 20}
+            snapToInterval={itemWidth + horizontalScale(20)}
             decelerationRate="fast"
+            contentContainerStyle={styles.bannerContainer}
           />
         ) : (
           <Text style={styles.noDataText}>No offers available</Text>
@@ -79,7 +88,6 @@ const LatestClassicsSlider: React.FC<OnlineOffersSliderProps> = ({
       </>
     );
   };
-
   return (
     <>
       {backgroundImage && backgroundImage.trim().length > 0 ? (
@@ -111,8 +119,8 @@ const LatestClassicsSlider: React.FC<OnlineOffersSliderProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: horizontalScale(10),
     paddingVertical: verticalScale(30),
-    paddingHorizontal: horizontalScale(12),
   },
   backgroundImage: {
     flex: 1,
@@ -124,39 +132,50 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   headerText: {
-    fontSize: (26 * width * 0.037) / 14,
+    fontSize: (25 * width * 0.037) / 14,
     fontWeight: '500',
     textAlign: 'center',
-    marginTop: verticalScale(15),
-    marginBottom: verticalScale(20),
+    marginVertical: verticalScale(20),
     color: '#5d1115',
-    paddingHorizontal: horizontalScale(40),
+  },
+  bannerContainer: {
+    paddingHorizontal: horizontalScale(10),
+    marginTop: verticalScale(10),
   },
   slide: {
+    height: itemHeight,
     width: itemWidth,
-    justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: horizontalScale(6),
+    marginHorizontal: horizontalScale(8),
     borderRadius: moderateScale(5),
   },
   image: {
     width: '100%',
-    overflow: 'hidden',
-    marginBottom: verticalScale(10),
+    height: '85%',
+    resizeMode: 'cover',
     borderRadius: moderateScale(5),
   },
+  titleButton: {
+    height: itemHeight * 0.12,
+    width: itemWidth * 0.75,
+    backgroundColor: '#5d1115',
+    marginVertical: verticalScale(10),
+    borderRadius: moderateScale(6),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   title: {
-    fontSize: width * 0.037,
-    fontWeight: '600',
-    marginTop: verticalScale(10),
-    color: '#5d1115',
+    fontSize: (24 * itemWidth * 0.037) / 14,
+    fontWeight: '400',
+    color: '#fff',
+    textAlign: 'center',
   },
   noDataText: {
-    fontSize: (18 * width * 0.037) / 14,
+    fontSize: moderateScale(18),
     color: '#5d1115',
     textAlign: 'center',
     marginVertical: verticalScale(20),
   },
 });
 
-export default LatestClassicsSlider;
+export default StaticBannerSliderButton;
