@@ -3,13 +3,15 @@ import cartReducer from '../../screens/CartScreen/reducer';
 import favReducer from '../../screens/FavoritesScreen/reducer';
 import userDataReducer from '../../screens/UsersScreen/reducer';
 import bannerDataReducer from '../../screens/HomeScreen/reducer';
+import plpDataReducer from '../../screens/ProductListingPage/reducers';
 
 
 const rootReducer = combineReducers({
   cartdata: cartReducer,
   favdata:favReducer,
   userData:userDataReducer,
-  bannerData:bannerDataReducer
+  bannerData:bannerDataReducer,
+  productData:plpDataReducer
 });
 
 export default rootReducer;

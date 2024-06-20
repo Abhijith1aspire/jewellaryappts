@@ -1,5 +1,6 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
+  ActivityIndicator,
   Dimensions,
   SafeAreaView,
   ScrollView,
@@ -20,14 +21,40 @@ import QuickDeliveryPin from '../../components/ProductListingPage/QuickDeliveryP
 import NewArrivalsPin from '../../components/ProductListingPage/NewArrivalsPin';
 import Card from '../../components/Card';
 import {data} from '../../data/data';
-import Footer from '../../components/Footer';
 import {placeHolderImage} from '../../constants/constants';
 import FastImage from 'react-native-fast-image';
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchPLPData} from './actions';
+import {useFocusEffect} from '@react-navigation/native';
 
 const {width, height} = Dimensions.get('window');
 
 const ProductListingPage: React.FC = () => {
   const scrollRef = useRef<ScrollView>(null);
+  const dispatch = useDispatch();
+  const [plpDataResponse, setPlpDataResponse] = useState<any>({});
+  const errorNoDataFound = useSelector(
+    (state: any) => state.productData?.error,
+  );
+  const isLoading = useSelector((state: any) => state.productData?.isLoading);
+
+  const productListDataFromRedux = useSelector(
+    (state: any) => state.productData?.productData,
+  );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(fetchPLPData());
+      scrollRef.current?.scrollTo({y: 0, animated: true});
+    }, [dispatch]),
+  );
+
+  useEffect(() => {
+    if (productListDataFromRedux) {
+      setPlpDataResponse();
+      console.log(plpDataResponse, 'PLP Screen');
+    }
+  }, [productListDataFromRedux]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -54,7 +81,11 @@ const ProductListingPage: React.FC = () => {
         <View style={styles.content}>
           <View style={styles.filterSortContainer}>
             <Filter />
-            <Text style={styles.itemCountText}>2313 Items</Text>
+            {plpDataResponse && (
+              <Text style={styles.itemCountText}>
+                {plpDataResponse?.total_count || 0} Items
+              </Text>
+            )}
             <Sort />
           </View>
           <View style={styles.pinsContainer}>
@@ -63,7 +94,14 @@ const ProductListingPage: React.FC = () => {
             <NewArrivalsPin />
           </View>
         </View>
-        <Card data={data} />
+        <Text>{errorNoDataFound}</Text>
+        {isLoading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="black" />
+          </View>
+        ) : (
+          plpDataResponse && <Card data={plpDataResponse} type={2} />
+        )}
         <View style={styles.imageContainer}>
           <FastImage
             source={{uri: placeHolderImage}}
@@ -139,6 +177,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fdefe9',
     paddingBottom: verticalScale(100),
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
