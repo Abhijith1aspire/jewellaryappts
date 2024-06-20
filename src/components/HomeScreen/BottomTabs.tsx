@@ -1,10 +1,9 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Dimensions,
   StyleSheet,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
@@ -12,42 +11,50 @@ import CategoryIcon from 'react-native-vector-icons/AntDesign';
 import WishListIcon from 'react-native-vector-icons/Fontisto';
 import CartIcon from 'react-native-vector-icons/SimpleLineIcons';
 import AccountIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {fontScale, moderateScale, verticalScale} from '../../utils/Metrics';
 
 const {width, height} = Dimensions.get('window');
 
 const BottomTabs = () => {
   const navigation = useNavigation();
-  const [selectedTab, setSelectedtab] = useState('Home');
+  const route = useRoute();
+  const [selectedTab, setSelectedTab] = useState('HomeScreen');
+
+  console.log(route);
 
   const tabItems = [
     {
-      name: 'Home',
+      name: 'HomeScreen',
+      displayName: 'Home',
       IconComponent: Icon,
       iconName: 'home',
       iconSize: moderateScale(28),
     },
     {
-      name: 'Categories',
+      name: 'ProductListingPage',
+      displayName: 'Categories',
       IconComponent: CategoryIcon,
       iconName: 'appstore-o',
       iconSize: moderateScale(28),
     },
     {
       name: 'Wishlist',
+      displayName: 'Wishlist',
       IconComponent: WishListIcon,
       iconName: 'heart-alt',
       iconSize: moderateScale(26),
     },
     {
-      name: 'Cart',
+      name: 'CartScreen',
+      displayName: 'Cart',
       IconComponent: CartIcon,
       iconName: 'bag',
       iconSize: moderateScale(26),
     },
     {
-      name: 'Profile',
+      name: 'UserScreen',
+      displayName: 'Profile',
       IconComponent: AccountIcon,
       iconName: 'account-outline',
       iconSize: moderateScale(35),
@@ -55,26 +62,7 @@ const BottomTabs = () => {
   ];
 
   const handleTabPress = (tabName: string) => {
-    console.log(tabName);
-    switch (tabName) {
-      case 'Home':
-        navigation.navigate('HomeScreen');
-        break;
-      case 'Categories':
-        navigation.navigate('ProductListingPage');
-        break;
-      case 'Wishlist':
-        navigation.navigate('Wishlist');
-        break;
-      case 'Cart':
-        navigation.navigate('CartScreen');
-        break;
-      case 'Profile':
-        navigation.navigate('UserScreen');
-        break;
-      default:
-        break;
-    }
+    navigation.navigate(tabName);
   };
 
   return (
@@ -84,10 +72,7 @@ const BottomTabs = () => {
         return (
           <TouchableOpacity
             key={index}
-            onPress={() => {
-              setSelectedtab(item.name);
-              handleTabPress(item.name);
-            }}>
+            onPress={() => handleTabPress(item.name)}>
             <View style={[styles.tabItem, {opacity: 0.8}]}>
               <IconComponent
                 name={item.iconName}
@@ -101,7 +86,7 @@ const BottomTabs = () => {
                   fontWeight: '500',
                   marginTop: verticalScale(4),
                 }}>
-                {item.name}
+                {item.displayName}
               </Text>
             </View>
           </TouchableOpacity>

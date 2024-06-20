@@ -11,7 +11,7 @@ import AccountIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import LikeIcon from 'react-native-vector-icons/AntDesign';
 import ShoppingBagIcon from 'react-native-vector-icons/Feather';
 import MenuIcon from 'react-native-vector-icons/Feather';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, DrawerActions} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../props/prop';
 import {moderateScale, verticalScale} from '../utils/Metrics';
@@ -29,7 +29,8 @@ const LogoHeader: React.FC = () => {
   return (
     <View style={styles.container}>
       <View style={styles.leftContainer}>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
           <MenuIcon
             name="menu"
             size={moderateScale(26)}
