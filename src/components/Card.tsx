@@ -6,13 +6,12 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  FlatList,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import CarouselIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
 import {useDispatch, useSelector} from 'react-redux';
-import {addToFav} from '../screens/FavoritesScreen/action';
 import {isItemInCart} from '../utils/utils';
 import RootStackParamList from '../props/prop';
 import {
@@ -22,6 +21,8 @@ import {
   verticalScale,
 } from '../utils/Metrics';
 import {ProductListResponse} from '../screens/ProductListingPage/PLPModel';
+import FastImage from 'react-native-fast-image';
+import {placeHolderImage} from '../constants/constants';
 
 type CarditemProps = {
   image: string;
@@ -81,7 +82,16 @@ const JewelleryItemRow: React.FC<CarditemProps> = ({
         })
       }>
       <View style={styles.imageContainer}>
-        <Image source={{uri: image}} style={styles.image} />
+        {image ? (
+          <Image source={{uri: image}} style={styles.image} />
+        ) : (
+          <FastImage
+            source={{uri: placeHolderImage}}
+            style={styles.image}
+            resizeMode={FastImage.resizeMode.contain}
+          />
+        )}
+
         <View style={styles.overlayIcons}>
           <TouchableOpacity style={[styles.iconContainer, styles.leftIcon]}>
             <Icon name="staro" size={18} color="#5d1115" />
@@ -95,21 +105,6 @@ const JewelleryItemRow: React.FC<CarditemProps> = ({
                 );
               } else {
                 console.log('Added to Favorites');
-                dispatch(
-                  addToFav({
-                    items: [
-                      {
-                        id: id,
-                        title: title,
-                        price: price,
-                        image: image,
-                        originalprice: originalprice,
-                        offer: offer,
-                        description: description,
-                      },
-                    ],
-                  }),
-                );
               }
             }}>
             <Icon name="hearto" size={18} color="#5d1115" />
@@ -119,8 +114,10 @@ const JewelleryItemRow: React.FC<CarditemProps> = ({
       <View style={styles.divider} />
       <View style={styles.priceContainer}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Text style={styles.priceText}>₹{price}</Text>
-          <Text style={styles.originalpriceText}>₹{originalprice}</Text>
+          {price && <Text style={styles.priceText}>₹{price}</Text>}
+          {originalprice && (
+            <Text style={styles.originalpriceText}>₹{originalprice}</Text>
+          )}
         </View>
         <CarouselIcon
           name="view-carousel-outline"
@@ -129,39 +126,56 @@ const JewelleryItemRow: React.FC<CarditemProps> = ({
           style={{marginLeft: horizontalScale(8)}}
         />
       </View>
-      <View style={{paddingBottom: 1}}>
-        <Text style={styles.offerText}>{offer}% Off</Text>
-      </View>
+      {offer && (
+        <View style={{paddingBottom: 1}}>
+          <Text style={styles.offerText}>{offer}% Off</Text>
+        </View>
+      )}
     </TouchableOpacity>
   );
 };
 
-const Card: React.FC<CardProps> = ({data, type}) => {
-  const columnWidth = type === 1 ? '100%' : '48%';
-  return (
-    <View style={styles.container}>
-      {data?.items.length > 0 &&
-        data?.items?.map(item => (
-          <View
-            key={item.id}
-            style={[
-              styles.itemWrapper,
-              {
-                width: columnWidth,
-              },
-            ]}>
-            <JewelleryItemRow
-              image={item?.thumb_image}
-              price={Math.round(item?.price)}
-              originalprice={Math.round(item?.price)}
-              offer={item?.discount_percent}
-              title={item?.name}
-              description="test description"
-              id={item?.id}
-            />
-          </View>
-        ))}
+const Card: React.FC<CardProps> = ({data, type = 1}) => {
+  const columnWidth = type === 1 ? width - horizontalScale(24) : width * 0.45;
+
+  const renderItem = ({item}: {item: any}) => (
+    <View
+      style={[
+        styles.itemWrapper,
+        {
+          width: columnWidth,
+          marginBottom: verticalScale(12),
+          marginRight: type === 1 ? 0 : horizontalScale(16), // Adjusted marginRight for two-column layout
+        },
+      ]}>
+      <JewelleryItemRow
+        image={item?.plp_thumb_image}
+        price={Math.round(item?.plp_price)}
+        originalprice={Math.round(item?.plp_price)}
+        offer={item?.plp_discount_percent}
+        title={item?.plp_name}
+        description="test description"
+        id={item?.plp_id}
+      />
     </View>
+  );
+
+  return (
+    <>
+      {data?.plp_items && data?.plp_items.length > 0 ? (
+        <FlatList
+          data={data?.plp_items}
+          renderItem={renderItem}
+          keyExtractor={item => item.plp_id.toString()}
+          key={type === 1 ? 'one-column' : 'two-column'}
+          contentContainerStyle={styles.container}
+          numColumns={type === 1 ? 1 : 2}
+          scrollEnabled={false}
+        />
+      ) : (
+        <Text style={styles.noDataText}>No Data available</Text>
+      )}
+    </>
   );
 };
 
@@ -170,28 +184,26 @@ export default Card;
 const styles = StyleSheet.create({
   container: {
     width: width,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    paddingHorizontal: horizontalScale(12),
+    paddingHorizontal: horizontalScale(10),
     paddingVertical: verticalScale(20),
-    alignItems: 'center',
+    backgroundColor: '#fdefe9',
+    justifyContent: 'center',
   },
   itemWrapper: {
-    borderRadius: moderateScale(8),
+    width: '47%',
+    borderRadius: moderateScale(4),
     elevation: moderateScale(2),
-    marginBottom: verticalScale(14),
     backgroundColor: '#ffffff',
+    marginVertical: verticalScale(6),
   },
   itemContainer: {
-    height: height * 0.29,
     backgroundColor: '#ffffff',
-    borderRadius: moderateScale(8),
+    borderRadius: moderateScale(4),
   },
   imageContainer: {
     position: 'relative',
     width: '100%',
-    height: height * 0.2,
+    height: height * 0.205,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
@@ -220,12 +232,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   leftIcon: {
-    left: 0,
-    top: 5,
+    left: horizontalScale(0),
+    top: verticalScale(8),
   },
   rightIcon: {
-    right: 0,
-    top: 5,
+    right: horizontalScale(0),
+    top: verticalScale(8),
   },
   divider: {
     borderBottomColor: '#CED0CE',
@@ -255,5 +267,12 @@ const styles = StyleSheet.create({
     marginVertical: verticalScale(1),
     color: '#5d1115',
     marginLeft: horizontalScale(10),
+    fontWeight: '500',
+  },
+  noDataText: {
+    fontSize: fontScale(18),
+    color: '#5d1115',
+    textAlign: 'center',
+    marginVertical: verticalScale(30),
   },
 });

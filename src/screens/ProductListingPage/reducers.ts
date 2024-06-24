@@ -1,4 +1,6 @@
 import { FETCH_PLP_DETAILS, FETCH_PLP_DETAILS_FAILURE, FETCH_PLP_DETAILS_REQUEST } from './actionTypes';
+import { applyKeyMapping} from '../../utils/utils';
+import { plpkeyMapping } from './PLPModel';
 
 interface Action {
   type: string;
@@ -22,7 +24,9 @@ const plpDataReducer = (state = initialState, action: Action): PLPProductData =>
     case FETCH_PLP_DETAILS_REQUEST:
       return { ...state, isLoading: true, error: null };
     case FETCH_PLP_DETAILS:
-      return { ...state, productData: action.payload, isLoading: false };
+      const dataAfterWaraaping=applyKeyMapping(action.payload,plpkeyMapping);
+ 
+      return { ...state, productData: dataAfterWaraaping, isLoading: false };
     case FETCH_PLP_DETAILS_FAILURE:
       console.error('Reducer error:', action.payload.error);
       return { ...state, productData: [], isLoading: false, error: action.payload.error };

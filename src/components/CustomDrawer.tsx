@@ -27,7 +27,6 @@ const CustomDrawer = props => {
         ? prevExpandedSections.filter(prev => prev !== section)
         : [...prevExpandedSections, section],
     );
-    console.log(expandedSections);
   };
 
   const sections = [

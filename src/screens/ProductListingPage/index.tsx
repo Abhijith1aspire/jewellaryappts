@@ -20,7 +20,6 @@ import BestSellerPin from '../../components/ProductListingPage/BestSellerPin';
 import QuickDeliveryPin from '../../components/ProductListingPage/QuickDeliveryPin';
 import NewArrivalsPin from '../../components/ProductListingPage/NewArrivalsPin';
 import Card from '../../components/Card';
-import {data} from '../../data/data';
 import {placeHolderImage} from '../../constants/constants';
 import FastImage from 'react-native-fast-image';
 import {useDispatch, useSelector} from 'react-redux';
@@ -51,8 +50,7 @@ const ProductListingPage: React.FC = () => {
 
   useEffect(() => {
     if (productListDataFromRedux) {
-      setPlpDataResponse();
-      console.log(plpDataResponse, 'PLP Screen');
+      setPlpDataResponse(productListDataFromRedux);
     }
   }, [productListDataFromRedux]);
 
@@ -61,16 +59,13 @@ const ProductListingPage: React.FC = () => {
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
         stickyHeaderIndices={[1]}
-        ref={scrollRef}>
+        ref={scrollRef}
+        showsVerticalScrollIndicator={false}>
         <MarketPriceDetails />
         <View style={styles.headerContainer}>
           <LogoHeader />
           <View style={styles.search}>
-            <Search
-              onSearch={() => {
-                console.log('search');
-              }}
-            />
+            <Search onSearch={() => {}} />
           </View>
         </View>
         <Banner />
@@ -83,7 +78,7 @@ const ProductListingPage: React.FC = () => {
             <Filter />
             {plpDataResponse && (
               <Text style={styles.itemCountText}>
-                {plpDataResponse?.total_count || 0} Items
+                {plpDataResponse?.plp_total_count || 0} Items
               </Text>
             )}
             <Sort />
@@ -100,7 +95,9 @@ const ProductListingPage: React.FC = () => {
             <ActivityIndicator size="large" color="black" />
           </View>
         ) : (
-          plpDataResponse && <Card data={plpDataResponse} type={2} />
+          <View style={{flex: 1}}>
+            {plpDataResponse && <Card data={plpDataResponse} type={2} />}
+          </View>
         )}
         <View style={styles.imageContainer}>
           <FastImage

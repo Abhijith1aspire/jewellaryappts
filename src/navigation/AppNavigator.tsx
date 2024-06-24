@@ -32,7 +32,6 @@ const {width} = Dimensions.get('window');
 
 const BottomTabsNavigator = () => {
   const route = useRoute();
-  console.log(route);
   return (
     <BottomTab.Navigator
       tabBar={props => <BottomTabs {...props} currentRoute={route.name} />}
